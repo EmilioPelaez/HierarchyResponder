@@ -12,14 +12,12 @@ struct ErrorHandlerViewModifier: ViewModifier {
 	
 	func body(content: Content) -> some View {
 		content.environment(\.errorClosure) { error in
-			Task {
-				do {
-					if let event = try handler(error) {
-						triggerEvent(event)
-					}
-				} catch {
-					errorClosure(error)
+			do {
+				if let event = try handler(error) {
+					triggerEvent(event)
 				}
+			} catch {
+				errorClosure(error)
 			}
 		}
 	}
