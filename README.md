@@ -13,7 +13,99 @@ To report an error or trigger an event, a view reads a closure from the environm
 
 Views above in the view hierarchy can register different responders that will be executed with the event or error as a parameter.
 
-A more detailed explanation can be found in [this article](https://betterprogramming.pub/building-a-responder-chain-using-the-swiftui-view-hierarchy-2a08df23689c).
+<details>
+  <summary>Expand for a detailed explanation.</summary>
+
+A common pattern in SwiftUI is to pass action callbacks as closures that make their way down the view hierarchy as parameters in each view in the hierarchy. This, however, leads to views that receive these closures as parameters but make no use of them, besides passing them down.
+
+In the simplified example below, `GridView` receives `selectionAction` as a parameter but never calls it. In a real-world application, there could be a lot more intermediate views, all of them carrying multiple parameters they only transport and don't use.
+
+### Without HierarchyResponder
+
+```swift
+struct ParentView: View {
+  @State var selection: Item?
+  let items: [Item] = ...
+  
+  var body: some View {
+    GridView(items: items, selectionAction: selectItem)
+  }
+  
+  func selectItem(_ item: Item) {
+    selection = item
+  }
+}
+
+struct GridView: View {
+  let items: [Item]
+  let selectionAction: (Item) -> Void // <-
+  
+  var body: some View {
+    ForEach(items) { item in
+      ItemView(item: item, selectionAction: selectionAction)
+    }
+  }
+}
+
+struct ItemView: View {
+  let item: Item
+  let selectionAction: (Item) -> Void
+  
+  var body: some View {
+    ItemPreview(_ item: Item)
+      .onTapGesture {
+        selectionAction(item)
+      }
+  }
+}
+```
+
+By using the view hierarchy as a responder chain, the triggering of the event (or error) and the responding to it are isolated to the views that are active participants.
+
+### With HierarchyResponder
+```swift
+struct ItemSelectionEvent: Event {
+  let item: Item
+}
+
+struct ParentView: View {
+  @State var selection: Item?
+  let items: [Item] = ...
+  
+  var body: some View {
+    GridView(items: items)
+      .handleEvent(ItemSelectionEvent.self) {
+        selection = $0.item
+      }
+  }
+}
+
+struct GridView: View {
+  let items: [Item]
+  
+  var body: some View {
+    ForEach(items) { item in
+      ItemView(item: item)
+    }
+  }
+}
+
+struct ItemView: View {
+  @Environment(\.triggerEvent) var triggerEvent
+  let item: Item
+  
+  var body: some View {
+    ItemPreview(_ item: Item)
+      .onTapGesture {
+        triggerEvent(ItemSelectionEvent(item: item))
+      }
+  }
+}
+```
+
+For a longer explanation of this functionality, you can read [this article](https://betterprogramming.pub/building-a-responder-chain-using-the-swiftui-view-hierarchy-2a08df23689c).
+
+</details>
 
 ## Event Protocol
 
@@ -57,9 +149,11 @@ struct TriggerView: View {
 }
 ```
 
-## Registering Responders
+## What's a Responder
 
-Registering a responder is done using the modifier syntax. There's several kinds of responders, and each responder has two versions, one that will respond to any kind of event or error, and one that receives the type of an event or error as the first parameter and will only act on values of that type.
+Responders are closures that "respond" in different ways to events or errors being triggered or reported by a view down in the view hierarchy.
+
+There's several kinds of responders, and each responder has two versions, one that will respond to any kind of event or error, and one that receives the type of an event or error as the first parameter and will only act on values of that type.
 
 ```swift
 struct ContentView: View {
@@ -70,6 +164,28 @@ struct ContentView: View {
       }
       .handleEvent {
       //  All event types will be handled here
+      }
+  }
+}
+```
+
+## Registering Responders
+
+Registering a responder is done using the modifier syntax, and just like with any other modifier in SwiftUI, the order in which they are executed matters.
+
+In simple terms, responders will be called in the order they added to the view, which is inverse to their position in the view hierarchy.
+
+For a better understanding of the view hierarchy you can read [this article](https://betterprogramming.pub/building-a-responder-chain-using-the-swiftui-view-hierarchy-2a08df23689c).
+
+```swift
+struct ContentView: View {
+  var body: some View {
+    TriggerView()
+      .handleEvent(MyEvent.self) {
+      //  Will be called first
+      }
+      .handleEvent {
+      //  Will be called second
       }
   }
 }
@@ -143,24 +259,14 @@ struct ContentView: View {
 }
 ```
 
-### Order Matters!
+## Other Goodies
 
-Just like with any other modifiers in SwiftUI, the order in which responders are added to a view matters, the closer they are to the view they modify.
+### EventButton
 
-Basically, responders will be called in the order they added to the view.
+`EventButton` is essentially a wrapper for `Button` that receives, instead of an action closure, an `Event` that is triggered whenever the underlying Button's action would be called.
 
-```swift
-struct ContentView: View {
-  var body: some View {
-    TriggerView()
-      .handleEvent(MyEvent.self) {
-      //  Will be called first
-      }
-      .handleEvent {
-      //  Will be called second
-      }
-  }
-}
-```
+### AlertableErrors
 
-For a better understanding of the view hierarchy you can read [this article](https://betterprogramming.pub/building-a-responder-chain-using-the-swiftui-view-hierarchy-2a08df23689c).
+`AlertableError` is a protocol that conforms to Error and represents a user-friendly error with a message and an optional title.
+
+By using the `.handleAlertErrors()` modifier, errors that conform to the `AlertableError` protocol will be handled by displaying an alert with the title and message provided by the error.
