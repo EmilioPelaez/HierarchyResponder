@@ -39,4 +39,15 @@ public extension View {
 		}
 	}
 	
+	/**
+	 Registers a closure to receive errors of the supplied type triggered using the
+	 `triggerError` Environment closure, and turn them into an Event that will
+	 be propagated instead.
+	 
+	 An error thrown by the handler closure will be propagated up the hierarchy.
+	 */
+	func catchError<E: Error>(_ type: E.Type, handler: @escaping () throws -> Event) -> some View {
+		catchError(type) { _ in try handler() }
+	}
+	
 }

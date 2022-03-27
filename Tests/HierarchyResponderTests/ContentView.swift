@@ -117,7 +117,7 @@ struct ContentView: View {
 	
 	var errorBody1: some View {
 		ErrorTriggerView1()
-			.catchError(SeventhError.self) { _ in
+			.catchError(SeventhError.self) {
 				TenthEvent()
 			}
 			.handleEvent(TenthEvent.self) {

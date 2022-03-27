@@ -1,0 +1,26 @@
+name: tests
+
+on: [push, pull_request]
+jobs:
+  run-tests:
+    runs-on: macos-11
+    steps:
+    - uses: actions/checkout@v2
+    - name: List available Xcode versions
+      run: ls /Applications | grep Xcode
+    - name: Select Xcode
+      run: sudo xcode-select -switch /Applications/Xcode_13.2.app && /usr/bin/xcodebuild -version
+    - name: Show path
+      run: pwd; ls
+    - name: Show Destinations
+      run: xcodebuild -showdestinations -scheme HierarchyResponderTests -project Tests/HierarchyResponderTests.xcodeproj | xcpretty
+    - name: Run unit tests
+      run: |
+          xcodebuild test -scheme HierarchyResponderTests -project Tests/HierarchyResponderTests.xcodeproj -destination "platform=iOS Simulator,name=iPhone 13" -derivedDataPath Build/ | xcpretty
+          cd Build/Build/ProfileData
+          cd $(ls -d */|head -n 1)
+          directory=${PWD##*/}
+          pathCoverage=Build/Build/ProfileData/${directory}/Coverage.profdata
+          cd ../../../../
+          xcrun llvm-cov export -format="lcov" -instr-profile $pathCoverage Build/Build/Products/Debug-iphonesimulator/HierarchyResponderTests.app/HierarchyResponderTests > info.lcov
+          bash <(curl https://codecov.io/bash)
