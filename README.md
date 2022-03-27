@@ -29,13 +29,13 @@ Events are triggered using the `triggerEvent` closure that can be read from the 
 struct MyEvent: Event {}
 
 struct TriggerView: View {
-	@Environment(\.triggerEvent) var triggerEvent
-	
-	var body: some View {
-		Button("Trigger") {
-			triggerEvent(MyEvent())
-		}
-	}
+  @Environment(\.triggerEvent) var triggerEvent
+  
+  var body: some View {
+    Button("Trigger") {
+      triggerEvent(MyEvent())
+    }
+  }
 }
 ```
 
@@ -47,13 +47,13 @@ In a similar way to events, errors are triggered using the `reportError` closure
 struct MyError: Error {}
 
 struct TriggerView: View {
-	@Environment(\.reportError) var reportError
-	
-	var body: some View {
-		Button("Trigger") {
-			reportError(MyError())
-		}
-	}
+  @Environment(\.reportError) var reportError
+  
+  var body: some View {
+    Button("Trigger") {
+      reportError(MyError())
+    }
+  }
 }
 ```
 
@@ -63,15 +63,15 @@ Registering a responder is done using the modifier syntax. There's several kinds
 
 ```swift
 struct ContentView: View {
-	var body: some View {
-		TriggerView()
-			.handleEvent(MyEvent.self) {
-			//	Only events of the type MyEvent will be handled
-			}
-			.handleEvent {
-			//	All event types will be handled here
-			}
-	}
+  var body: some View {
+    TriggerView()
+      .handleEvent(MyEvent.self) {
+      //  Only events of the type MyEvent will be handled
+      }
+      .handleEvent {
+      //  All event types will be handled here
+      }
+  }
 }
 ```
 
@@ -85,16 +85,16 @@ Unhandled events will continue to be propagated up the view hierarchy.
 
 ```swift
 struct ContentView: View {
-	var body: some View {
-		TriggerView()
-			.receiveEvent { event in
-				if canHandle(event) {
-					//	Do something
-					return .handled
-				}
-				return .notHandled
-			}
-	}
+  var body: some View {
+    TriggerView()
+      .receiveEvent { event in
+        if canHandle(event) {
+          //  Do something
+          return .handled
+        }
+        return .notHandled
+      }
+  }
 }
 ```
 
@@ -116,12 +116,12 @@ struct UnauthenticatedError: Error {}
 struct ShowSignInEvent: Event {}
 
 struct ContentView: View {
-	var body: some View {
-		TriggerView()
-			.catchError(UnauthenticatedError.self) {
-				ShowSignInEvent()
-			}
-	}
+  var body: some View {
+    TriggerView()
+      .catchError(UnauthenticatedError.self) {
+        ShowSignInEvent()
+      }
+  }
 }
 ```
 
@@ -131,15 +131,15 @@ All event responders, as well as the catchError responders, receive a throwing c
 
 ```swift
 struct ContentView: View {
-	var body: some View {
-		TriggerView()
-			.handleEvent { event in
-				guard canHandle(event) else {
-					throw AnError()
-				}
-				//	Handle Event
-			}
-	}
+  var body: some View {
+    TriggerView()
+      .handleEvent { event in
+        guard canHandle(event) else {
+          throw AnError()
+        }
+        //  Handle Event
+      }
+  }
 }
 ```
 
@@ -151,15 +151,15 @@ Basically, responders will be called in the order they added to the view.
 
 ```swift
 struct ContentView: View {
-	var body: some View {
-		TriggerView()
-			.handleEvent(MyEvent.self) {
-			//	Will be called first
-			}
-			.handleEvent {
-			//	Will be called second
-			}
-	}
+  var body: some View {
+    TriggerView()
+      .handleEvent(MyEvent.self) {
+      //  Will be called first
+      }
+      .handleEvent {
+      //  Will be called second
+      }
+  }
 }
 ```
 
