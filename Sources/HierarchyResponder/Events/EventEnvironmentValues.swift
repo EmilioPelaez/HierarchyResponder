@@ -4,6 +4,14 @@
 
 import SwiftUI
 
+public struct TriggerEvent {
+	let function: (Event) -> Void
+	
+	public func callAsFunction(_ event: Event) -> Void {
+		function(event)
+	}
+}
+
 public extension EnvironmentValues {
 	/**
 	 This closure can be used when an `Event` that can't be handled by the
@@ -16,7 +24,8 @@ public extension EnvironmentValues {
 	 If no view has registered an event that handles the `Event`, an
 	 `assertionFailure` will be triggered.
 	 */
-	var triggerEvent: (Event) -> Void {
-		{ eventClosure($0) }
+	var triggerEvent: TriggerEvent {
+		get { self[EventClosureEnvironmentKey.self] }
+		set { self[EventClosureEnvironmentKey.self] = newValue }
 	}
 }

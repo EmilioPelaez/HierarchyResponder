@@ -5,20 +5,20 @@
 import SwiftUI
 
 struct EventHandlerViewModifier: ViewModifier {
-	@Environment(\.eventClosure) var eventClosure
+	@Environment(\.triggerEvent) var triggerEvent
 	@Environment(\.reportError) var reportError
 	
 	let handler: (Event) throws -> Event?
 	
 	func body(content: Content) -> some View {
-		content.environment(\.eventClosure) {
+		content.environment(\.triggerEvent, TriggerEvent {
 			do {
 				if let event = try handler($0) {
-					eventClosure(event)
+					triggerEvent(event)
 				}
 			} catch {
 				reportError(error)
 			}
-		}
+		})
 	}
 }

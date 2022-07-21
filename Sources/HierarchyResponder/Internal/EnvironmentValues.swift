@@ -11,17 +11,12 @@ struct ErrorClosureEnvironmentKey: EnvironmentKey {
 }
 
 struct EventClosureEnvironmentKey: EnvironmentKey {
-	static var defaultValue: (Event) -> Void = { _ in }
+	static var defaultValue: TriggerEvent = .init { _ in }
 }
 
 extension EnvironmentValues {
 	var errorClosure: (Error) -> Void {
 		get { self[ErrorClosureEnvironmentKey.self] }
 		set { self[ErrorClosureEnvironmentKey.self] = newValue }
-	}
-	
-	var eventClosure: (Event) -> Void {
-		get { self[EventClosureEnvironmentKey.self] }
-		set { self[EventClosureEnvironmentKey.self] = newValue }
 	}
 }
