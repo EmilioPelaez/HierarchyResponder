@@ -1,8 +1,8 @@
 //
 //  ContentView.swift
-//  HierarchyResponderExample
+//  HierarchyResponderMacExample
 //
-//  Created by Emilio Peláez on 26/03/22.
+//  Created by Emilio Peláez on 22/07/22.
 //
 
 import HierarchyResponder
@@ -42,8 +42,6 @@ struct TriggerView: View {
 		 */
 		EventButton(ButtonEvent()) {
 			Text("Tap Me!")
-				.padding(.horizontal)
-				.font(.title)
 		}
 		.buttonStyle(.borderedProminent)
 		.tint(.blue)
