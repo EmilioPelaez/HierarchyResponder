@@ -5,18 +5,11 @@
 import SwiftUI
 
 struct ErrorClosureEnvironmentKey: EnvironmentKey {
-	static var defaultValue: (Error) -> Void = { error in
+	static var defaultValue: ReportError = .init { error in
 		assertionFailure("Unhandled Error \(error)")
 	}
 }
 
 struct EventClosureEnvironmentKey: EnvironmentKey {
 	static var defaultValue: TriggerEvent = .init { _ in }
-}
-
-extension EnvironmentValues {
-	var errorClosure: (Error) -> Void {
-		get { self[ErrorClosureEnvironmentKey.self] }
-		set { self[ErrorClosureEnvironmentKey.self] = newValue }
-	}
 }

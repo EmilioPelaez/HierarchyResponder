@@ -4,6 +4,14 @@
 
 import SwiftUI
 
+public struct ReportError {
+	let function: (Error) -> Void
+	
+	public func callAsFunction(_ event: Error) -> Void {
+		function(event)
+	}
+}
+
 public extension EnvironmentValues {
 	/**
 	 This closure can be used when an `Error` that can't be handled by the
@@ -16,7 +24,8 @@ public extension EnvironmentValues {
 	 If no view has registered an action that handles the `Error`, an
 	 `assertionFailure` will be triggered.
 	 */
-	var reportError: (Error) -> Void {
-		{ errorClosure($0) }
+	var reportError: ReportError {
+		get { self[ErrorClosureEnvironmentKey.self] }
+		set { self[ErrorClosureEnvironmentKey.self] = newValue }
 	}
 }
