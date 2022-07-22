@@ -115,7 +115,7 @@ It can be of any type and contain any kind of additional information. It exists 
 
 ## Triggering an Event
 
-Events are triggered using the `triggerEvent` closure that can be read from the `Environment`.
+Events are triggered using the `triggerEvent` object that can be read from the `Environment`. Since this object implements `callAsFunction`, it can be called like closure.
 
 ```swift
 struct MyEvent: Event {}
@@ -133,7 +133,7 @@ struct TriggerView: View {
 
 ## Reporting an Error
 
-In a similar way to events, errors are triggered using the `reportError` closure.
+In a similar way to events, errors are triggered using the `reportError` closure. Since this object implements `callAsFunction`, it can be called like closure.
 
 ```swift
 struct MyError: Error {}
