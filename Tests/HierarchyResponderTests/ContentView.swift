@@ -140,10 +140,11 @@ struct ContentView: View {
 }
 
 struct EventTriggerView0: View {
-	@Environment(\.triggerEvent) var triggerEvent
-
 	var body: some View {
-		EventButton(FirstEvent()) { Text("Event Test 0") }
+		Color.red
+			.frame(width: 200, height: 40)
+			.accessibilityIdentifier("Event Test 0")
+			.onTapGesture(trigger: FirstEvent())
 	}
 }
 

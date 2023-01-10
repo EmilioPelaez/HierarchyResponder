@@ -19,7 +19,7 @@ class HierarchyResponderUITests: XCTestCase {
 		let app = XCUIApplication()
 		app.launch()
 		
-		app.buttons["Event Test 0"].tap()
+		app.otherElements.matching(identifier: "Event Test 0").element.tap()
 		
 		XCTAssert(true)
 		

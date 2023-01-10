@@ -265,6 +265,10 @@ struct ContentView: View {
 
 `EventButton` is essentially a wrapper for `Button` that receives, instead of an action closure, an `Event` that is triggered whenever the underlying Button's action would be called.
 
+### onTapGesture(trigger:)
+
+The `onTapGesture(trigger:)` modifier works just like `onTapGesture(perform:)`, but instead of executing a closure it triggers an event.
+
 ### AlertableErrors
 
 `AlertableError` is a protocol that conforms to Error and represents a user-friendly error with a message and an optional title.

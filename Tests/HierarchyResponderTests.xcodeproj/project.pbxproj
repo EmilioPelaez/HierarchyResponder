@@ -25,6 +25,7 @@
 		C83BB03D27EF367200239DEA /* View+EventHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB03027EF367200239DEA /* View+EventHandling.swift */; };
 		C83BB03E27EF367200239DEA /* EventButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB03127EF367200239DEA /* EventButton.swift */; };
 		C83BB04627EF36A000239DEA /* HierarchyResponderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB04527EF36A000239DEA /* HierarchyResponderUITests.swift */; };
+		C84EBC01296DF85600316A4E /* View+TapGestureEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84EBC00296DF85600316A4E /* View+TapGestureEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		C83BB03127EF367200239DEA /* EventButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventButton.swift; sourceTree = "<group>"; };
 		C83BB04327EF36A000239DEA /* HierarchyResponderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HierarchyResponderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C83BB04527EF36A000239DEA /* HierarchyResponderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HierarchyResponderUITests.swift; sourceTree = "<group>"; };
+		C84EBC00296DF85600316A4E /* View+TapGestureEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+TapGestureEvent.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +167,7 @@
 				C83BB02F27EF367200239DEA /* Event.swift */,
 				C83BB03027EF367200239DEA /* View+EventHandling.swift */,
 				C83BB03127EF367200239DEA /* EventButton.swift */,
+				C84EBC00296DF85600316A4E /* View+TapGestureEvent.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C83BB03827EF367200239DEA /* View+ErrorRecovering.swift in Sources */,
+				C84EBC01296DF85600316A4E /* View+TapGestureEvent.swift in Sources */,
 				C83BB03727EF367200239DEA /* View+ErrorHandling.swift in Sources */,
 				C83BB03427EF367200239DEA /* EnvironmentValues.swift in Sources */,
 				C83BB01427EF360200239DEA /* ContentView.swift in Sources */,
