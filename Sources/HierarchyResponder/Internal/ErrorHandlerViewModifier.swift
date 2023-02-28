@@ -8,17 +8,29 @@ struct ErrorHandlerViewModifier: ViewModifier {
 	@Environment(\.reportError) var reportError
 	@Environment(\.triggerEvent) var triggerEvent
 	
-	let handler: (Error) throws -> Event?
+	let handler: (Error) async throws -> Event?
+	
+	@State var tasks: [Task<Void, Never>] = []
 	
 	func body(content: Content) -> some View {
 		content.environment(\.reportError, ReportError { error in
-			do {
-				if let event = try handler(error) {
-					triggerEvent(event)
+			let task = Task {
+				do {
+					if let event = try await handler(error) {
+						triggerEvent(event)
+					}
+				} catch {
+					guard !Task.isCancelled else { return }
+					reportError(error)
 				}
-			} catch {
-				reportError(error)
 			}
+			tasks.append(task)
 		})
+		.onDisappear {
+			tasks.forEach {
+				$0.cancel()
+			}
+			tasks = []
+		}
 	}
 }

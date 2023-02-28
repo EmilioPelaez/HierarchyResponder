@@ -16,9 +16,9 @@ public extension View {
 	 
 	 An error thrown by the handler closure will be propagated up the hierarchy.
 	 */
-	func catchError(_ handler: @escaping (Error) throws -> Event) -> some View {
+	func catchError(_ handler: @escaping (Error) async throws -> Event) -> some View {
 		let handlerModifier = ErrorHandlerViewModifier {
-			try handler($0)
+			try await handler($0)
 		}
 		return modifier(handlerModifier)
 	}
@@ -30,12 +30,12 @@ public extension View {
 	 
 	 An error thrown by the handler closure will be propagated up the hierarchy.
 	 */
-	func catchError<E: Error>(_ type: E.Type, handler: @escaping (E) throws -> Event) -> some View {
+	func catchError<E: Error>(_ type: E.Type, handler: @escaping (E) async throws -> Event) -> some View {
 		catchError {
 			guard let error = $0 as? E else {
 				throw $0
 			}
-			return try handler(error)
+			return try await handler(error)
 		}
 	}
 	
@@ -46,8 +46,8 @@ public extension View {
 	 
 	 An error thrown by the handler closure will be propagated up the hierarchy.
 	 */
-	func catchError<E: Error>(_ type: E.Type, handler: @escaping () throws -> Event) -> some View {
-		catchError(type) { _ in try handler() }
+	func catchError<E: Error>(_ type: E.Type, handler: @escaping () async throws -> Event) -> some View {
+		catchError(type) { _ in try await handler() }
 	}
 	
 }
