@@ -8,17 +8,30 @@ struct EventHandlerViewModifier: ViewModifier {
 	@Environment(\.triggerEvent) var triggerEvent
 	@Environment(\.reportError) var reportError
 	
-	let handler: (Event) throws -> Event?
+	let handler: (Event) async throws -> Event?
+	
+	@State var tasks: [Task<Void, Never>] = []
 	
 	func body(content: Content) -> some View {
-		content.environment(\.triggerEvent, TriggerEvent {
-			do {
-				if let event = try handler($0) {
-					triggerEvent(event)
+		content.environment(\.triggerEvent, TriggerEvent { prev in
+			let task = Task {
+				do {
+					if let event = try await handler(prev) {
+						triggerEvent(event)
+					}
+				} catch {
+					guard !Task.isCancelled else { return }
+					reportError(error)
 				}
-			} catch {
-				reportError(error)
 			}
+			tasks.append(task)
 		})
+		.onDisappear {
+			tasks.forEach {
+				$0.cancel()
+			}
+			tasks = []
+		}
 	}
+	
 }

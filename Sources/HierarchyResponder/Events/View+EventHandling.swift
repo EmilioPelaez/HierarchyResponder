@@ -25,9 +25,9 @@ public extension View {
 	 handled, and should no longer be propagated up the view hierarchy, and
 	 `.notHandled` when the `Event` has not been completely handled.
 	 */
-	func receiveEvent(_ closure: @escaping (Event) throws -> ReceiveEventResult) -> some View {
+	func receiveEvent(_ closure: @escaping (Event) async throws -> ReceiveEventResult) -> some View {
 		let handlerModifier = EventHandlerViewModifier {
-			switch try closure($0) {
+			switch try await closure($0) {
 			case .handled: return nil
 			case .notHandled: return $0
 			}
@@ -43,10 +43,10 @@ public extension View {
 	 handled, and should no longer be propagated up the view hierarchy, and
 	 `.notHandled` when the `Event` has not been completely handled.
 	 */
-	func receiveEvent<Received: Event>(_: Received.Type, closure: @escaping (Received) throws -> ReceiveEventResult) -> some View {
+	func receiveEvent<Received: Event>(_: Received.Type, closure: @escaping (Received) async throws -> ReceiveEventResult) -> some View {
 		let handlerModifier = EventHandlerViewModifier {
 			guard let event = $0 as? Received else { return $0 }
-			switch try closure(event) {
+			switch try await closure(event) {
 			case .handled: return nil
 			case .notHandled: return $0
 			}
@@ -62,8 +62,8 @@ public extension View {
 	 handled, and should no longer be propagated up the view hierarchy, and
 	 `.notHandled` when the `Event` has not been completely handled.
 	 */
-	func receiveEvent<Received: Event>(_ type: Received.Type, closure: @escaping () throws -> ReceiveEventResult) -> some View {
-		receiveEvent(type) { _ in try closure() }
+	func receiveEvent<Received: Event>(_ type: Received.Type, closure: @escaping () async throws -> ReceiveEventResult) -> some View {
+		receiveEvent(type) { _ in try await closure() }
 	}
 	
 	/**
@@ -73,9 +73,9 @@ public extension View {
 	 Using this modifier will effectively **stop the propagation of all events
 	 up the view hierarchy.**
 	 */
-	func handleEvent(_ handler: @escaping (Event) throws -> Void) -> some View {
+	func handleEvent(_ handler: @escaping (Event) async throws -> Void) -> some View {
 		receiveEvent {
-			try handler($0)
+			try await handler($0)
 			return .handled
 		}
 	}
@@ -89,9 +89,9 @@ public extension View {
 	 
 	 Any other `Events` will be ignored and propagated up the view hierarchy.
 	 */
-	func handleEvent<Handled: Event>(_ type: Handled.Type, handler: @escaping (Handled) throws -> Void) -> some View {
+	func handleEvent<Handled: Event>(_ type: Handled.Type, handler: @escaping (Handled) async throws -> Void) -> some View {
 		receiveEvent(type) {
-			try handler($0)
+			try await handler($0)
 			return .handled
 		}
 	}
@@ -105,8 +105,8 @@ public extension View {
 	 
 	 Any other `Events` will be ignored and propagated up the view hierarchy.
 	 */
-	func handleEvent<Handled: Event>(_ type: Handled.Type, handler: @escaping () throws -> Void) -> some View {
-		handleEvent(type) { _ in try handler() }
+	func handleEvent<Handled: Event>(_ type: Handled.Type, handler: @escaping () async throws -> Void) -> some View {
+		handleEvent(type) { _ in try await handler() }
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public extension View {
 	 The closure should return an `Event` that can be a new `Event` or the same
 	 `Event` that was supplied as a parameter.
 	 */
-	func transformEvent(_ transform: @escaping (Event) throws -> Event) -> some View {
+	func transformEvent(_ transform: @escaping (Event) async throws -> Event) -> some View {
 		modifier(EventHandlerViewModifier(handler: transform))
 	}
 	
@@ -127,10 +127,10 @@ public extension View {
 	 The closure should return an `Event` that can be a new `Event` or the same
 	 `Event` that was supplied as a parameter.
 	 */
-	func transformEvent<Transformed: Event>(_: Transformed.Type, transform: @escaping (Transformed) throws -> Event) -> some View {
+	func transformEvent<Transformed: Event>(_: Transformed.Type, transform: @escaping (Transformed) async throws -> Event) -> some View {
 		let transformModifier = EventHandlerViewModifier {
 			guard let event = $0 as? Transformed else { return $0 }
-			return try transform(event)
+			return try await transform(event)
 		}
 		return modifier(transformModifier)
 	}
@@ -142,8 +142,8 @@ public extension View {
 	 The closure should return a new `Event` that will be propagated up the view
 	 hierarchy.
 	 */
-	func transformEvent<Transformed: Event>(_ type: Transformed.Type, transform: @escaping () throws -> Event) -> some View {
-		transformEvent(type) { _ in try transform() }
+	func transformEvent<Transformed: Event>(_ type: Transformed.Type, transform: @escaping () async throws -> Event) -> some View {
+		transformEvent(type) { _ in try await transform() }
 	}
 	
 }

@@ -17,20 +17,33 @@ struct ButtonError: AlertableError {
 }
 
 struct ContentView: View {
+	@State var identifier: Date = .now
+	@State var value: Int = 0
+	let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+	
 	var body: some View {
-		TriggerView()
+		VStack {
+			TriggerView()
+			Text("\(value)")
+		}
 		/*
 		`handleEvent` will trigger the closure for all events of the type
 		`ButtonEvent`. In this example we'll simply throw an error
 		 */
 			.handleEvent(ButtonEvent.self) {
-				throw ButtonError()
+				try await Task.sleep(nanoseconds: 5_000_000_000)
+				print("Hello World")
+				value += 1
 			}
 		/*
 		`handleAlertErrors` will handle all errors that conform to `AlertableError`
 		and will display an alert
 		 */
 			.handleAlertErrors()
+			.id(identifier)
+			.onReceive(timer) { input in
+				identifier = input
+			}
 	}
 }
 
