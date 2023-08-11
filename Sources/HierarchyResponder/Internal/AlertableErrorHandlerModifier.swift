@@ -12,7 +12,7 @@ struct AlertableErrorHandlerModifier: ViewModifier {
 	}
 	
 	func body(content: Content) -> some View {
-		if #available(iOS 15.0, macOS 12.0, *) {
+		if #available(iOS 15.0, macOS 12.0, watchOS 8.0, *) {
 			receiver(content: content)
 				.alert(alertError?.title ?? "Error", isPresented: showAlert, presenting: alertError) { _ in
 					Button(action: dismissAlert) {
