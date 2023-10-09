@@ -5,7 +5,10 @@
 import SwiftUI
 
 struct ErrorSafetyModifier: ViewModifier {
+	@Environment(\.requiresExplicitResponders) var requiresExplicitResponders
 	@Environment(\.responderSafetyLevel) var safetyLevel
+	
+	@Environment(\.registeredErrors) var registeredErrors
 	
 	let errors: [any Error.Type]
 	
@@ -20,6 +23,19 @@ struct ErrorSafetyModifier: ViewModifier {
 				case .strict: fatalError("Received unregistered error \(String(describing: type(of: error)))")
 				}
 				return .notHandled
+			}
+			.onAppear {
+				guard requiresExplicitResponders else { return }
+				let unregistered = errors.filter { event in
+					!registeredErrors.contains { $0 == event }
+				}
+				if unregistered.isEmpty { return }
+				let errorsString = unregistered.map { String(describing: $0) }.joined(separator: ", ")
+				switch safetyLevel {
+				case .disabled: break
+				case .relaxed: print("The following errors don't have a registered handler: " + errorsString)
+				case .strict: fatalError("The following errors don't have a registered handler: " + errorsString)
+				}
 			}
 	}
 }

@@ -54,6 +54,7 @@ public extension View {
 			}
 		}
 		return modifier(handlerModifier)
+			.registerHandler(for: Received.self)
 	}
 	
 	/**
@@ -91,11 +92,8 @@ public extension View {
 	 
 	 Any other `Errors` will be ignored and propagated up the view hierarchy.
 	 */
-	func handleError<Handled: Error>(_: Handled.Type, handler: @escaping (Handled) async -> Void) -> some View {
-		receiveError {
-			guard let error = $0 as? Handled else {
-				return .notHandled
-			}
+	func handleError<Handled: Error>(_ type: Handled.Type, handler: @escaping (Handled) async -> Void) -> some View {
+		receiveError(type) { error in
 			await handler(error)
 			return .handled
 		}
@@ -144,6 +142,7 @@ public extension View {
 			throw error
 		}
 		return modifier(transformModifier)
+			.registerHandler(for: Transformable.self)
 	}
 	
 	/**

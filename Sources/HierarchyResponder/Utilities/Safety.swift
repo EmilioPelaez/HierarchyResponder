@@ -34,4 +34,11 @@ public extension View {
 		environment(\.responderSafetyLevel, level)
 	}
 	
+	func registerHandler(for event: any Event.Type) -> some View {
+		transformEnvironment(\.registeredEvents) { $0.append(event) }
+	}
+	
+	func registerHandler(for error: any Error.Type) -> some View {
+		transformEnvironment(\.registeredErrors) { $0.append(error) }
+	}
 }

@@ -52,6 +52,7 @@ public extension View {
 			}
 		}
 		return modifier(handlerModifier)
+			.registerHandler(for: Received.self)
 	}
 	
 	/**
@@ -127,12 +128,13 @@ public extension View {
 	 The closure should return an `Event` that can be a new `Event` or the same
 	 `Event` that was supplied as a parameter.
 	 */
-	func transformEvent<Transformed: Event>(_: Transformed.Type, transform: @escaping (Transformed) async throws -> Event) -> some View {
+	func transformEvent<Transformable: Event>(_: Transformable.Type, transform: @escaping (Transformable) async throws -> Event) -> some View {
 		let transformModifier = EventHandlerViewModifier {
-			guard let event = $0 as? Transformed else { return $0 }
+			guard let event = $0 as? Transformable else { return $0 }
 			return try await transform(event)
 		}
 		return modifier(transformModifier)
+			.registerHandler(for: Transformable.self)
 	}
 	
 	/**
