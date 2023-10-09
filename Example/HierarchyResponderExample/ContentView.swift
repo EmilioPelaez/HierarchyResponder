@@ -17,41 +17,30 @@ struct ButtonError: AlertableError {
 }
 
 struct ContentView: View {
-	@State var identifier: Date = .now
 	@State var value: Int = 0
-	let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 	
 	var body: some View {
 		VStack {
 			TriggerView()
 			Text("\(value)")
 		}
+		.handleEvent(ButtonEvent.self) {
+			try await Task.sleep(nanoseconds: 1_000_000_000)
+			value += 1
+		}
 		/*
-		`handleEvent` will trigger the closure for all events of the type
-		`ButtonEvent`. In this example we'll simply throw an error
+		 `handleAlertErrors` will handle all errors that conform to `AlertableError`
+		 and will display an alert
 		 */
-			.handleEvent(ButtonEvent.self) {
-				try await Task.sleep(nanoseconds: 5_000_000_000)
-				print("Hello World")
-				value += 1
-			}
-		/*
-		`handleAlertErrors` will handle all errors that conform to `AlertableError`
-		and will display an alert
-		 */
-			.handleAlertErrors()
-			.id(identifier)
-			.onReceive(timer) { input in
-				identifier = input
-			}
+		.handleAlertErrors()
 	}
 }
 
 struct TriggerView: View {
 	var body: some View {
 		/*
-		Instead of using `Button`, we use `EventButton`, which automatically sends
-		a `ButtonEvent` event up the view hierarchy
+		 Instead of using `Button`, we use `EventButton`, which automatically sends
+		 a `ButtonEvent` event up the view hierarchy
 		 */
 		EventButton(ButtonEvent()) {
 			Text("Tap Me!")
