@@ -47,7 +47,7 @@ extension EnvironmentValues {
 	}
 	
 	var registeredErrors: [any Error.Type] {
-			get { self[RegisteredErrorsKey.self] }
-			set { self[RegisteredErrorsKey.self] = newValue }
+		get { self[RegisteredErrorsKey.self] }
+		set { self[RegisteredErrorsKey.self] = newValue }
 	}
 }
