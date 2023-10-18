@@ -8,10 +8,16 @@ struct ErrorSafetyModifier: ViewModifier {
 	@Environment(\.requiresExplicitResponders) var requiresExplicitResponders
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
-	@Environment(\.registeredErrors) var registeredErrors
+	@Environment(\.handledErrors) var receivedErrors
 	
 	let errors: [any Error.Type]
 	let location: String
+	
+	@State var declaredErrors: [any Error.Type] = []
+	
+	var allDeclaredErrors: [any Error.Type] {
+		errors + declaredErrors
+	}
 	
 	func body(content: Content) -> some View {
 		content
@@ -25,10 +31,12 @@ struct ErrorSafetyModifier: ViewModifier {
 				}
 				return .notHandled
 			}
+			.onPreferenceChange(DeclaredErrorsKey.self) { value in declaredErrors = value.errors }
+			.preference(key: DeclaredErrorsKey.self, value: .init(errors: allDeclaredErrors))
 			.onAppear {
 				guard requiresExplicitResponders else { return }
 				let unregistered = errors.filter { event in
-					!registeredErrors.contains { $0 == event }
+					!receivedErrors.contains { $0 == event }
 				}
 				if unregistered.isEmpty { return }
 				let errorsString = unregistered.map { String(describing: $0) }.joined(separator: ", ")

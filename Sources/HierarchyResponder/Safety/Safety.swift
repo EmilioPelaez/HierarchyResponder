@@ -35,10 +35,10 @@ public extension View {
 	}
 	
 	func registerHandler(for event: any Event.Type) -> some View {
-		transformEnvironment(\.registeredEvents) { $0.append(event) }
+		transformEnvironment(\.handledEvents) { $0.append(event) }
 	}
 	
 	func registerHandler(for error: any Error.Type) -> some View {
-		transformEnvironment(\.registeredErrors) { $0.append(error) }
+		transformEnvironment(\.handledErrors) { $0.append(error) }
 	}
 }

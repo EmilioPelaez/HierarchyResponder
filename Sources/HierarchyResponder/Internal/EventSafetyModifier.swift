@@ -8,15 +8,20 @@ struct EventSafetyModifier: ViewModifier {
 	@Environment(\.requiresExplicitResponders) var requiresExplicitResponders
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
-	@Environment(\.registeredEvents) var registeredEvents
+	@Environment(\.handledEvents) var receivedEvents
 	
 	let events: [any Event.Type]
 	let location: String
 	
+	@State var declaredEvents: [any Event.Type] = []
+	var allDeclaredEvents: [any Event.Type] {
+		events + declaredEvents
+	}
+	
 	func body(content: Content) -> some View {
 		content
 			.receiveEvent { event in
-				let found = events.contains { type(of: event) == $0 }
+				let found = (events + declaredEvents).contains { type(of: event) == $0 }
 				if found { return .notHandled }
 				switch safetyLevel {
 				case .disabled: break
@@ -25,10 +30,12 @@ struct EventSafetyModifier: ViewModifier {
 				}
 				return .notHandled
 			}
+			.onPreferenceChange(DeclaredEventsKey.self) { value in declaredEvents = value.events }
+			.preference(key: DeclaredEventsKey.self, value: .init(events: allDeclaredEvents))
 			.onAppear {
 				guard requiresExplicitResponders else { return }
 				let unregistered = events.filter { event in
-					!registeredEvents.contains { $0 == event }
+					!receivedEvents.contains { $0 == event }
 				}
 				if unregistered.isEmpty { return }
 				let eventsString = unregistered.map { String(describing: $0) }.joined(separator: ", ")

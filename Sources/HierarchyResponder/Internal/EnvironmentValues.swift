@@ -22,11 +22,11 @@ struct RequiresExplicitRespondersKey: EnvironmentKey {
 	static var defaultValue = true
 }
 
-struct RegisteredEventsKey: EnvironmentKey {
+struct HandledEventsKey: EnvironmentKey {
 	static var defaultValue: [any Event.Type] = []
 }
 
-struct RegisteredErrorsKey: EnvironmentKey {
+struct HandledErrorsKey: EnvironmentKey {
 	static var defaultValue: [any Error.Type] = []
 }
 
@@ -41,13 +41,13 @@ extension EnvironmentValues {
 		set { self[RequiresExplicitRespondersKey.self] = newValue }
 	}
 	
-	var registeredEvents: [any Event.Type] {
-		get { self[RegisteredEventsKey.self] }
-		set { self[RegisteredEventsKey.self] = newValue }
+	var handledEvents: [any Event.Type] {
+		get { self[HandledEventsKey.self] }
+		set { self[HandledEventsKey.self] = newValue }
 	}
 	
-	var registeredErrors: [any Error.Type] {
-		get { self[RegisteredErrorsKey.self] }
-		set { self[RegisteredErrorsKey.self] = newValue }
+	var handledErrors: [any Error.Type] {
+		get { self[HandledErrorsKey.self] }
+		set { self[HandledErrorsKey.self] = newValue }
 	}
 }
