@@ -14,17 +14,17 @@ public enum ResponderSafetyLevel {
 
 public extension View {
 	
-	func triggers(_ events: any Event.Type...) -> some View {
+	func triggers(_ events: any Event.Type..., file: String = #file, line: Int = #line) -> some View {
 #if DEBUG
-		modifier(EventSafetyModifier(events: events))
+		modifier(EventSafetyModifier(events: events, location: "\(file):\(line)"))
 #else
 		self
 #endif
 	}
 	
-	func reports(_ errors: any Error.Type...) -> some View {
+	func reports(_ errors: any Error.Type..., file: String = #file, line: Int = #line) -> some View {
 #if DEBUG
-		modifier(ErrorSafetyModifier(errors: errors))
+		modifier(ErrorSafetyModifier(errors: errors, location: "\(file):\(line)"))
 #else
 		self
 #endif

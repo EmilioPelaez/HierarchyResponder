@@ -11,6 +11,7 @@ struct EventSafetyModifier: ViewModifier {
 	@Environment(\.registeredEvents) var registeredEvents
 	
 	let events: [any Event.Type]
+	let location: String
 	
 	func body(content: Content) -> some View {
 		content
@@ -19,8 +20,8 @@ struct EventSafetyModifier: ViewModifier {
 				if found { return .notHandled }
 				switch safetyLevel {
 				case .disabled: break
-				case .relaxed: print("Received unregistered event \(String(describing: type(of: event)))")
-				case .strict: fatalError("Received unregistered event \(String(describing: type(of: event)))")
+				case .relaxed: print("Received unregistered event \(String(describing: type(of: event))) at \(location)")
+				case .strict: fatalError("Received unregistered event \(String(describing: type(of: event))) at \(location)")
 				}
 				return .notHandled
 			}

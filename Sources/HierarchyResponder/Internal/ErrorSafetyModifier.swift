@@ -11,6 +11,7 @@ struct ErrorSafetyModifier: ViewModifier {
 	@Environment(\.registeredErrors) var registeredErrors
 	
 	let errors: [any Error.Type]
+	let location: String
 	
 	func body(content: Content) -> some View {
 		content
@@ -19,8 +20,8 @@ struct ErrorSafetyModifier: ViewModifier {
 				if found { return .notHandled }
 				switch safetyLevel {
 				case .disabled: break
-				case .relaxed: print("Received unregistered error \(String(describing: type(of: error)))")
-				case .strict: fatalError("Received unregistered error \(String(describing: type(of: error)))")
+				case .relaxed: print("Received unregistered error \(String(describing: type(of: error))) at \(location)")
+				case .strict: fatalError("Received unregistered error \(String(describing: type(of: error))) at \(location)")
 				}
 				return .notHandled
 			}
