@@ -34,6 +34,10 @@ public extension View {
 		environment(\.responderSafetyLevel, level)
 	}
 	
+	func requireExplicitResponders(_ flag: Bool) -> some View {
+		environment(\.requiresExplicitResponders, flag)
+	}
+	
 	func registerHandler(for event: any Event.Type) -> some View {
 		transformEnvironment(\.handledEvents) { $0.append(event) }
 	}
