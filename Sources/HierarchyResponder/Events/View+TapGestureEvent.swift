@@ -4,6 +4,7 @@
 
 import SwiftUI
 
+@available(tvOS 16.0, *)
 struct TapGestureEvent: ViewModifier {
 	@Environment(\.triggerEvent) var triggerEvent
 	
@@ -19,6 +20,7 @@ struct TapGestureEvent: ViewModifier {
 }
 
 public extension View {
+	@available(tvOS 16.0, *)
 	func onTapGesture(count: Int = 1, trigger event: @escaping @autoclosure () -> Event) -> some View {
 		modifier(TapGestureEvent(tapCount: count, event: event))
 	}
