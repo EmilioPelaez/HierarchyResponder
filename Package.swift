@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
 	name: "HierarchyResponder",
-	platforms: [.iOS(.v13), .macOS(.v10_15), .watchOS(.v6), .macCatalyst(.v13), .tvOS(.v13), .visionOS(.v1)],
+	platforms: [.iOS(.v14), .macOS(.v11), .watchOS(.v7), .macCatalyst(.v14), .tvOS(.v14), .visionOS(.v1)],
 	products: [
 		.library(
 			name: "HierarchyResponder",

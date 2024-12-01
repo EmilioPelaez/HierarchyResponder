@@ -30,6 +30,10 @@ struct HandledErrorsKey: EnvironmentKey {
 	static var defaultValue: [any Error.Type] = []
 }
 
+struct PublishingDestinationsKey: EnvironmentKey {
+	static var defaultValue: [ObjectIdentifier: PublishingDestination] = [:]
+}
+
 extension EnvironmentValues {
 	var responderSafetyLevel: ResponderSafetyLevel {
 		get { self[ResponderSafetyLevelKey.self] }
@@ -49,5 +53,10 @@ extension EnvironmentValues {
 	var handledErrors: [any Error.Type] {
 		get { self[HandledErrorsKey.self] }
 		set { self[HandledErrorsKey.self] = newValue }
+	}
+	
+	var publishingDestinations: [ObjectIdentifier: PublishingDestination] {
+		get { self[PublishingDestinationsKey.self] }
+		set { self[PublishingDestinationsKey.self] = newValue }
 	}
 }
