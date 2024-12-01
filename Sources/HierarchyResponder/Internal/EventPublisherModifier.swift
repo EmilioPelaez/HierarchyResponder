@@ -26,7 +26,8 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	}
 	
 	func verifyPublisher() {
-		if publishingDestinations[ObjectIdentifier(eventType)] == destination { return }
+		let destination = publishingDestinations[ObjectIdentifier(eventType)]
+		if destination == nil || destination == self.destination { return }
 		switch safetyLevel {
 		case .strict, .relaxed: print("Registrating duplicate publisher for event \(String(describing: eventType)) using a different destination. This may lead to unexpected behavior.")
 		case .disabled: break
