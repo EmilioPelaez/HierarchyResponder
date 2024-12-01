@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+/**
+ `PublishingDestination` is used in the `.publisher` view modifier to specify
+ which publishers should receive the event.
+ 
+ The order is determined by the order they are declared in the view hierarchy.
+ */
 public enum PublishingDestination {
 	case firstSubscriber
 	case allSubscribers
@@ -15,6 +21,18 @@ public enum PublishingDestination {
 	public static var `default`: PublishingDestination { .lastSubscriber }
 }
 
+/**
+ `EventPublishers` are not created directly, instead they are received when using
+ the `.publisher` view modifier.
+ 
+ `EventPublishers` are designed to be stored and used to inject events into the
+ view hierarchy.
+ 
+ Because they implement `callAsFunction` they can be called like this:
+ ```
+ publisher(MyEvent())
+ ```
+ */
 public struct EventPublisher<T: Event>: Equatable {
 	static var empty: Self { .init(destination: .default) { _ in } }
 	
