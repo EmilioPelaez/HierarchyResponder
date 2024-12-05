@@ -8,30 +8,28 @@
 import SwiftUI
 
 struct EventSubscriberModifier<E: Event>: ViewModifier {
-	@Environment(\.publishingDestinations) var publishingDestinations
+	@Environment(\.eventSubscriptionRegistrars) var registrars
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
 	let eventType: E.Type
 	let handler: (E) -> Void
 	
-	var destination: PublishingDestination {
-		publishingDestinations[ObjectIdentifier(eventType)] ?? .default
-	}
-	
 	func body(content: Content) -> some View {
 		content
-			.preference(key: EventPublisherKey<E>.self,
-									value: EventPublisher<E>(destination: destination, publish: handler))
-			.onAppear(perform: verifyPublisher)
-			.onChange(of: publishingDestinations) { _ in verifyPublisher() }
+			.onAppear(perform: registerPublisher)
+			.onChange(of: registrars) { _ in registerPublisher() }
 	}
 	
-	func verifyPublisher() {
-		if publishingDestinations[ObjectIdentifier(eventType)] != nil { return }
-		switch safetyLevel {
-		case .strict: fatalError("Subscribed to event with no publisher: \(String(describing: eventType))")
-		case .relaxed: print("Subscribed to event with no publisher: \(String(describing: eventType))")
-		case .disabled: break
+	func registerPublisher() {
+		guard let registrar = registrars[ObjectIdentifier(E.self)] else {
+			let message = "Subscribed to event with no publisher: \(String(describing: E.self))"
+			switch safetyLevel {
+			case .strict: fatalError(message)
+			case .relaxed: return print(message)
+			case .disabled: return
+			}
 		}
+		let publisher = EventPublisher<E>(destination: registrar.destination, publish: handler)
+		registrar.register(publisher)
 	}
 }

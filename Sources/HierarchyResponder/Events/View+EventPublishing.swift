@@ -33,7 +33,7 @@ public extension View {
 	 in which they were added to the view hierarchy.
 	 */
 	func publisher<E: Event>(for event: E.Type, destination: PublishingDestination = .default, register: @escaping (EventPublisher<E>) -> Void) -> some View {
-		modifier(EventPublisherModifier(eventType: event, destination: destination, register: register))
+		modifier(EventPublisherModifier(destination: destination, register: register))
 	}
 	
 	/**

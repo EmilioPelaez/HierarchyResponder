@@ -39,22 +39,3 @@ extension DeclaredErrorsKey.Container: Equatable {
 		lhs.errors.map { String(describing: $0) } == rhs.errors.map { String(describing: $0) }
 	}
 }
-
-struct EventPublisherKey<T: Event>: PreferenceKey {
-	static var defaultValue: EventPublisher<T> { .empty }
-	
-	static func reduce(value: inout EventPublisher<T>, nextValue: () -> EventPublisher<T>) {
-		switch value.destination {
-		case .firstSubscriber: break
-		case .allSubscribers:
-			let closure1 = value.publish
-			let closure2 = nextValue().publish
-			value = .init(destination: value.destination) {
-				closure1($0)
-				closure2($0)
-			}
-		case .lastSubscriber:
-			value = nextValue()
-		}
-	}
-}

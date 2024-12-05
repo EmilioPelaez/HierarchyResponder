@@ -8,28 +8,33 @@
 import SwiftUI
 
 struct EventPublisherModifier<E: Event>: ViewModifier {
-	@Environment(\.publishingDestinations) var publishingDestinations
+	@Environment(\.eventSubscriptionRegistrars) var registrars
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
-	let eventType: E.Type
-	let destination: PublishingDestination
-	let register: (EventPublisher<E>) -> Void
+	let registrar: EventSubscriptionRegistrar
+	
+	init(destination: PublishingDestination, register: @escaping (EventPublisher<E>) -> Void) {
+		self.registrar = .init(destination: destination) { registrar in
+			guard let registrar = registrar as? EventPublisher<E> else {
+				fatalError("Registrar type mismatch")
+			}
+			register(registrar)
+		}
+	}
 	
 	func body(content: Content) -> some View {
 		content
-			.onPreferenceChange(EventPublisherKey<E>.self, perform: register)
-			.transformEnvironment(\.publishingDestinations) { destinations in
-				destinations[ObjectIdentifier(eventType)] = destination
+			.transformEnvironment(\.eventSubscriptionRegistrars) { registrars in
+				registrars[ObjectIdentifier(E.self)] = registrar
 			}
 			.onAppear(perform: verifyPublisher)
-			.onChange(of: publishingDestinations) { _ in verifyPublisher() }
+			.onChange(of: registrars) { _ in verifyPublisher() }
 	}
 	
 	func verifyPublisher() {
-		let destination = publishingDestinations[ObjectIdentifier(eventType)]
-		if destination == nil || destination == self.destination { return }
+		if registrars[ObjectIdentifier(E.self)] == nil { return }
 		switch safetyLevel {
-		case .strict, .relaxed: print("Registrating duplicate publisher for event \(String(describing: eventType)) using a different destination. This may lead to unexpected behavior.")
+		case .strict, .relaxed: print("Registrating duplicate publisher for event \(String(describing: E.self)). This may lead to unexpected behavior.")
 		case .disabled: break
 		}
 	}

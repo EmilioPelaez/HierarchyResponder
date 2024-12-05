@@ -30,8 +30,8 @@ struct HandledErrorsKey: EnvironmentKey {
 	static var defaultValue: [any Error.Type] = []
 }
 
-struct PublishingDestinationsKey: EnvironmentKey {
-	static var defaultValue: [ObjectIdentifier: PublishingDestination] = [:]
+struct EventSubscriptionRegistrarsKey: EnvironmentKey {
+	static var defaultValue: [ObjectIdentifier: EventSubscriptionRegistrar] = [:]
 }
 
 extension EnvironmentValues {
@@ -55,8 +55,8 @@ extension EnvironmentValues {
 		set { self[HandledErrorsKey.self] = newValue }
 	}
 	
-	var publishingDestinations: [ObjectIdentifier: PublishingDestination] {
-		get { self[PublishingDestinationsKey.self] }
-		set { self[PublishingDestinationsKey.self] = newValue }
+	var eventSubscriptionRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
+		get { self[EventSubscriptionRegistrarsKey.self] }
+		set { self[EventSubscriptionRegistrarsKey.self] = newValue }
 	}
 }
