@@ -17,8 +17,6 @@ public enum PublishingDestination {
 	case firstSubscriber
 	case allSubscribers
 	case lastSubscriber
-	
-	public static var `default`: PublishingDestination { .lastSubscriber }
 }
 
 /**
