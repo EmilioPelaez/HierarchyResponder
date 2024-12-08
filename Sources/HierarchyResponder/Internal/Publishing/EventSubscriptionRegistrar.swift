@@ -13,9 +13,9 @@ extension EventPublisher: EventPublisherProtocol {}
 struct EventSubscriptionRegistrar: Identifiable, Equatable {
 	let id: UUID = .init()
 	
-	let register: (PublishersContainer) -> Void
+	let register: (PublishersContainer?) -> Void
 	
-	init(register: @escaping (PublishersContainer) -> Void) {
+	init(register: @escaping (PublishersContainer?) -> Void) {
 		self.register = register
 	}
 	

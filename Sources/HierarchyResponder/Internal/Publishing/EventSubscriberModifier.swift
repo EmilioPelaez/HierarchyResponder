@@ -41,16 +41,23 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 	func body(content: Content) -> some View {
 		content
 			.onAppear(perform: createRegistrar)
-			.onAppearAndChange(of: registrars, perform: registerPublisher)
+			.onAppearAndChange(of: registrars) { registrars in
+				registerPublisher(registrars, container: container)
+			}
+			.onAppearAndChange(of: container) { container in
+				registerPublisher(registrars, container: container)
+			}
 			.onDisappear(perform: unregisterPublisher)
 			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
 	}
 	
 	func createRegistrar() {
-		registrar = .init { container = $0 }
+		registrar = .init {
+			container = $0
+		}
 	}
 	
-	func registerPublisher(_ registrars: RegistrarDictionary) {
+	func registerPublisher(_ registrars: RegistrarDictionary, container: PublishersContainer?) {
 		guard let registrar = registrars[ObjectIdentifier(E.self)] else {
 			let message = "Subscribed to event with no publisher: \(String(describing: E.self))"
 			switch safetyLevel {
@@ -65,6 +72,6 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 	}
 	
 	func unregisterPublisher() {
-		registrars[ObjectIdentifier(E.self)]?.register(.init(publishers: []))
+		registrars[ObjectIdentifier(E.self)]?.register(nil)
 	}
 }
