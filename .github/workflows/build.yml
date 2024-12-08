@@ -31,7 +31,7 @@ jobs:
       with:
         project: Example/HierarchyResponderExample.xcodeproj
         scheme: HierarchyResponderExample
-        destination: generic/platform=macOS
+        destination: platform=macOS
         action: build
 
     - name: Build Watch
