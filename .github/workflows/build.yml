@@ -18,13 +18,10 @@ jobs:
         version: latest
         beta: false
     
-    - name: Set location
-      run: cd Example; pwd; ls
-    
     - name: Build Mac
       uses: sersoft-gmbh/xcodebuild-action@v3
       with:
         project: Example/HierarchyResponderExample.xcodeproj
         scheme: HierarchyResponderExample
-        destination: platform=iOS
+        destination: platform="iOS Simulator"
         action: build
