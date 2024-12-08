@@ -31,3 +31,8 @@ jobs:
         action: test
         derived-data-path: build
         enable-code-coverage: true
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
