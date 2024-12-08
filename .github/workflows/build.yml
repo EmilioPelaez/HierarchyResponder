@@ -25,6 +25,9 @@ jobs:
         scheme: HierarchyResponderExample
         destination: generic/platform=iOS Simulator
         action: build
+
+    - name: Build Mac Raw
+      run: xcodebuild -project /Users/runner/work/HierarchyResponder/HierarchyResponder/Example/HierarchyResponderExample.xcodeproj -scheme HierarchyResponderExample -destination platform=macOS build
     
     - name: Build Mac
       uses: sersoft-gmbh/xcodebuild-action@v3
