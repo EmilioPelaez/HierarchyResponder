@@ -8,17 +8,14 @@
 import SwiftUI
 
 protocol EventPublisherProtocol {}
-
-extension EventPublisher: EventPublisherProtocol{}
+extension EventPublisher: EventPublisherProtocol {}
 
 struct EventSubscriptionRegistrar: Identifiable, Equatable {
 	let id: UUID = .init()
 	
-	let destination: PublishingDestination
-	let register: (EventPublisherProtocol) -> Void
+	let register: (PublishersContainer) -> Void
 	
-	init(destination: PublishingDestination, register: @escaping (EventPublisherProtocol) -> Void) {
-		self.destination = destination
+	init(register: @escaping (PublishersContainer) -> Void) {
 		self.register = register
 	}
 	

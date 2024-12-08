@@ -31,7 +31,7 @@ struct HandledErrorsKey: EnvironmentKey {
 }
 
 struct EventSubscriptionRegistrarsKey: EnvironmentKey {
-	static var defaultValue: [ObjectIdentifier: EventSubscriptionRegistrar] = [:]
+	static var defaultValue: RegistrarDictionary = [:]
 }
 
 extension EnvironmentValues {
@@ -55,7 +55,7 @@ extension EnvironmentValues {
 		set { self[HandledErrorsKey.self] = newValue }
 	}
 	
-	var eventSubscriptionRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
+	var eventSubscriptionRegistrars: RegistrarDictionary {
 		get { self[EventSubscriptionRegistrarsKey.self] }
 		set { self[EventSubscriptionRegistrarsKey.self] = newValue }
 	}

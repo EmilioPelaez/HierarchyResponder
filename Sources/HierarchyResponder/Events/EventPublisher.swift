@@ -33,16 +33,14 @@ public enum PublishingDestination {
  publisher(MyEvent())
  ```
  */
-public struct EventPublisher<T: Event>: Equatable {
-	static var empty: Self { .init(destination: .default) { _ in } }
+public struct EventPublisher<T: Event>: Identifiable, Equatable {
+	public let id: UUID = .init()
 	
-	public let id: UUID
-	let destination: PublishingDestination
+	static var empty: Self { .init { _ in } }
+	
 	public let publish: (T) -> Void
 	
-	init(id: UUID = .init(), destination: PublishingDestination, publish: @escaping (T) -> Void) {
-		self.id = id
-		self.destination = destination
+	init(publish: @escaping (T) -> Void) {
 		self.publish = publish
 	}
 	
@@ -50,7 +48,7 @@ public struct EventPublisher<T: Event>: Equatable {
 		publish(event)
 	}
 	
-	public static func == (lhs: Self, rhs: Self) -> Bool {
+	public static func == (lhs: EventPublisher, rhs: EventPublisher) -> Bool {
 		lhs.id == rhs.id
 	}
 }
