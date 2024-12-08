@@ -26,5 +26,5 @@ jobs:
       with:
         project: Example/HierarchyResponderExample.xcodeproj
         scheme: HierarchyResponderExample
-        destination: platform=macOS
+        destination: platform=iOS
         action: build
