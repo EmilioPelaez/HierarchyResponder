@@ -33,6 +33,8 @@ jobs:
         scheme: HierarchyResponderExample
         destination: platform=macOS
         action: build
+        quiet: false
+        output-formatter: xcbeautify
 
     - name: Build Watch
       uses: sersoft-gmbh/xcodebuild-action@v3
