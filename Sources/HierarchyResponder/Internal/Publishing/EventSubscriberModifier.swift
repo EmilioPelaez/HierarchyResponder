@@ -30,6 +30,7 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 		content
 			.onAppear(perform: createRegistrar)
 			.onAppearAndChange(of: registrars, perform: registerPublisher)
+			.onDisappear(perform: unregisterPublisher)
 			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
 	}
 	
@@ -49,5 +50,9 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 		let publishers = container?.publishers ?? []
 		let container = PublishersContainer(publishers: [publisher] + publishers)
 		registrar.register(container)
+	}
+	
+	func unregisterPublisher() {
+		registrars[ObjectIdentifier(E.self)]?.register(.init(publishers: []))
 	}
 }

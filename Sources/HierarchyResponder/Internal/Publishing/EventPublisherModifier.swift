@@ -59,13 +59,17 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	
 	func updatePublisher(container: PublishersContainer?, destination: PublishingDestination) {
 		let publishers = container?.publishers.compactMap { $0 as? EventPublisher<E> } ?? []
+		guard !publishers.isEmpty else { return register(nil) }
 		let publisher: EventPublisher<E>?
 		switch destination {
-		case .firstSubscriber: publisher = publishers.first
-		case .allSubscribers: publisher = .init { event in
-			publishers.forEach { $0.publish(event) }
-		}
-		case .lastSubscriber: publisher = publishers.last
+		case .firstSubscriber:
+			publisher = publishers.first
+		case .allSubscribers:
+			publisher = .init { event in
+				publishers.forEach { $0.publish(event) }
+			}
+		case .lastSubscriber:
+			publisher = publishers.last
 		}
 		register(publisher)
 	}
