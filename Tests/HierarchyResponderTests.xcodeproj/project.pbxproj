@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,21 +11,7 @@
 		C83BB01427EF360200239DEA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB01327EF360200239DEA /* ContentView.swift */; };
 		C83BB01627EF360400239DEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C83BB01527EF360400239DEA /* Assets.xcassets */; };
 		C83BB01927EF360400239DEA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C83BB01827EF360400239DEA /* Preview Assets.xcassets */; };
-		C83BB03227EF367200239DEA /* ErrorHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02327EF367200239DEA /* ErrorHandlerViewModifier.swift */; };
-		C83BB03327EF367200239DEA /* EventHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02427EF367200239DEA /* EventHandlerViewModifier.swift */; };
-		C83BB03427EF367200239DEA /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02527EF367200239DEA /* EnvironmentValues.swift */; };
-		C83BB03527EF367200239DEA /* AlertableErrorHandlerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02627EF367200239DEA /* AlertableErrorHandlerModifier.swift */; };
-		C83BB03627EF367200239DEA /* View+AlertableErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02827EF367200239DEA /* View+AlertableErrors.swift */; };
-		C83BB03727EF367200239DEA /* View+ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02927EF367200239DEA /* View+ErrorHandling.swift */; };
-		C83BB03827EF367200239DEA /* View+ErrorRecovering.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02A27EF367200239DEA /* View+ErrorRecovering.swift */; };
-		C83BB03927EF367200239DEA /* AlertableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02B27EF367200239DEA /* AlertableError.swift */; };
-		C83BB03A27EF367200239DEA /* ErrorEnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02C27EF367200239DEA /* ErrorEnvironmentValues.swift */; };
-		C83BB03B27EF367200239DEA /* EventEnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02E27EF367200239DEA /* EventEnvironmentValues.swift */; };
-		C83BB03C27EF367200239DEA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB02F27EF367200239DEA /* Event.swift */; };
-		C83BB03D27EF367200239DEA /* View+EventHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB03027EF367200239DEA /* View+EventHandling.swift */; };
-		C83BB03E27EF367200239DEA /* EventButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB03127EF367200239DEA /* EventButton.swift */; };
 		C83BB04627EF36A000239DEA /* HierarchyResponderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83BB04527EF36A000239DEA /* HierarchyResponderUITests.swift */; };
-		C84EBC01296DF85600316A4E /* View+TapGestureEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84EBC00296DF85600316A4E /* View+TapGestureEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,23 +30,13 @@
 		C83BB01327EF360200239DEA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C83BB01527EF360400239DEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C83BB01827EF360400239DEA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		C83BB02327EF367200239DEA /* ErrorHandlerViewModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandlerViewModifier.swift; sourceTree = "<group>"; };
-		C83BB02427EF367200239DEA /* EventHandlerViewModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandlerViewModifier.swift; sourceTree = "<group>"; };
-		C83BB02527EF367200239DEA /* EnvironmentValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
-		C83BB02627EF367200239DEA /* AlertableErrorHandlerModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertableErrorHandlerModifier.swift; sourceTree = "<group>"; };
-		C83BB02827EF367200239DEA /* View+AlertableErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+AlertableErrors.swift"; sourceTree = "<group>"; };
-		C83BB02927EF367200239DEA /* View+ErrorHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+ErrorHandling.swift"; sourceTree = "<group>"; };
-		C83BB02A27EF367200239DEA /* View+ErrorRecovering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+ErrorRecovering.swift"; sourceTree = "<group>"; };
-		C83BB02B27EF367200239DEA /* AlertableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertableError.swift; sourceTree = "<group>"; };
-		C83BB02C27EF367200239DEA /* ErrorEnvironmentValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorEnvironmentValues.swift; sourceTree = "<group>"; };
-		C83BB02E27EF367200239DEA /* EventEnvironmentValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEnvironmentValues.swift; sourceTree = "<group>"; };
-		C83BB02F27EF367200239DEA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		C83BB03027EF367200239DEA /* View+EventHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+EventHandling.swift"; sourceTree = "<group>"; };
-		C83BB03127EF367200239DEA /* EventButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventButton.swift; sourceTree = "<group>"; };
 		C83BB04327EF36A000239DEA /* HierarchyResponderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HierarchyResponderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C83BB04527EF36A000239DEA /* HierarchyResponderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HierarchyResponderUITests.swift; sourceTree = "<group>"; };
-		C84EBC00296DF85600316A4E /* View+TapGestureEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+TapGestureEvent.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C89986732D05E96E001BD8B1 /* Sources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = Sources; path = ../Sources; sourceTree = SOURCE_ROOT; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C83BB00B27EF360200239DEA /* Frameworks */ = {
@@ -104,8 +80,8 @@
 				C83BB01127EF360200239DEA /* HierarchyResponderTestsApp.swift */,
 				C83BB01327EF360200239DEA /* ContentView.swift */,
 				C83BB01527EF360400239DEA /* Assets.xcassets */,
-				C83BB02027EF367200239DEA /* Sources */,
 				C83BB01727EF360400239DEA /* Preview Content */,
+				C89986732D05E96E001BD8B1 /* Sources */,
 			);
 			path = HierarchyResponderTests;
 			sourceTree = "<group>";
@@ -116,60 +92,6 @@
 				C83BB01827EF360400239DEA /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		C83BB02027EF367200239DEA /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				C83BB02127EF367200239DEA /* HierarchyResponder */,
-			);
-			name = Sources;
-			path = ../../Sources;
-			sourceTree = "<group>";
-		};
-		C83BB02127EF367200239DEA /* HierarchyResponder */ = {
-			isa = PBXGroup;
-			children = (
-				C83BB02227EF367200239DEA /* Internal */,
-				C83BB02727EF367200239DEA /* Errors */,
-				C83BB02D27EF367200239DEA /* Events */,
-			);
-			path = HierarchyResponder;
-			sourceTree = "<group>";
-		};
-		C83BB02227EF367200239DEA /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				C83BB02327EF367200239DEA /* ErrorHandlerViewModifier.swift */,
-				C83BB02427EF367200239DEA /* EventHandlerViewModifier.swift */,
-				C83BB02527EF367200239DEA /* EnvironmentValues.swift */,
-				C83BB02627EF367200239DEA /* AlertableErrorHandlerModifier.swift */,
-			);
-			path = Internal;
-			sourceTree = "<group>";
-		};
-		C83BB02727EF367200239DEA /* Errors */ = {
-			isa = PBXGroup;
-			children = (
-				C83BB02827EF367200239DEA /* View+AlertableErrors.swift */,
-				C83BB02927EF367200239DEA /* View+ErrorHandling.swift */,
-				C83BB02A27EF367200239DEA /* View+ErrorRecovering.swift */,
-				C83BB02B27EF367200239DEA /* AlertableError.swift */,
-				C83BB02C27EF367200239DEA /* ErrorEnvironmentValues.swift */,
-			);
-			path = Errors;
-			sourceTree = "<group>";
-		};
-		C83BB02D27EF367200239DEA /* Events */ = {
-			isa = PBXGroup;
-			children = (
-				C83BB02E27EF367200239DEA /* EventEnvironmentValues.swift */,
-				C83BB02F27EF367200239DEA /* Event.swift */,
-				C83BB03027EF367200239DEA /* View+EventHandling.swift */,
-				C83BB03127EF367200239DEA /* EventButton.swift */,
-				C84EBC00296DF85600316A4E /* View+TapGestureEvent.swift */,
-			);
-			path = Events;
 			sourceTree = "<group>";
 		};
 		C83BB04427EF36A000239DEA /* HierarchyResponderUITests */ = {
@@ -195,6 +117,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				C89986732D05E96E001BD8B1 /* Sources */,
+			);
 			name = HierarchyResponderTests;
 			productName = HierarchyResponderTests;
 			productReference = C83BB00E27EF360200239DEA /* HierarchyResponderTests.app */;
@@ -212,6 +137,9 @@
 			);
 			dependencies = (
 				C83BB04A27EF36A000239DEA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C89986732D05E96E001BD8B1 /* Sources */,
 			);
 			name = HierarchyResponderUITests;
 			productName = HierarchyResponderUITests;
@@ -280,22 +208,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C83BB03827EF367200239DEA /* View+ErrorRecovering.swift in Sources */,
-				C84EBC01296DF85600316A4E /* View+TapGestureEvent.swift in Sources */,
-				C83BB03727EF367200239DEA /* View+ErrorHandling.swift in Sources */,
-				C83BB03427EF367200239DEA /* EnvironmentValues.swift in Sources */,
 				C83BB01427EF360200239DEA /* ContentView.swift in Sources */,
-				C83BB03A27EF367200239DEA /* ErrorEnvironmentValues.swift in Sources */,
-				C83BB03627EF367200239DEA /* View+AlertableErrors.swift in Sources */,
-				C83BB03E27EF367200239DEA /* EventButton.swift in Sources */,
-				C83BB03927EF367200239DEA /* AlertableError.swift in Sources */,
 				C83BB01227EF360200239DEA /* HierarchyResponderTestsApp.swift in Sources */,
-				C83BB03227EF367200239DEA /* ErrorHandlerViewModifier.swift in Sources */,
-				C83BB03327EF367200239DEA /* EventHandlerViewModifier.swift in Sources */,
-				C83BB03D27EF367200239DEA /* View+EventHandling.swift in Sources */,
-				C83BB03B27EF367200239DEA /* EventEnvironmentValues.swift in Sources */,
-				C83BB03527EF367200239DEA /* AlertableErrorHandlerModifier.swift in Sources */,
-				C83BB03C27EF367200239DEA /* Event.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
