@@ -27,17 +27,7 @@ jobs:
         action: build
 
     - name: Build Mac Raw
-      run: xcodebuild -project /Users/runner/work/HierarchyResponder/HierarchyResponder/Example/HierarchyResponderExample.xcodeproj -scheme HierarchyResponderExample -destination platform=macOS build
-    
-    - name: Build Mac
-      uses: sersoft-gmbh/xcodebuild-action@v3
-      with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExample
-        destination: platform=macOS
-        action: build
-        quiet: false
-        output-formatter: xcbeautify
+      run: swift build
 
     - name: Build Watch
       uses: sersoft-gmbh/xcodebuild-action@v3
