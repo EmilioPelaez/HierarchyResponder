@@ -25,6 +25,6 @@ jobs:
       uses: sersoft-gmbh/xcodebuild-action@v3
       with:
         project: Example/HierarchyResponderExample.xcodeproj
-        scheme: Example
+        scheme: HierarchyResponderExample
         destination: platform=macOS
         action: build
