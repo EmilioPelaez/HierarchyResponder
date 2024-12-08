@@ -1,0 +1,30 @@
+name: Project
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Apple Xcode Select
+      uses: BoundfoxStudios/action-xcode-select@v1
+      with:
+        version: latest
+        beta: false
+    
+    - name: Set location
+      run: cd Example; pwd; ls
+    
+    - name: Build Mac
+      uses: sersoft-gmbh/xcodebuild-action@v3
+      with:
+        project: HierarchyResponderExample.xcodeproj
+        scheme: Example
+        destination: platform=macOS
+        action: build
