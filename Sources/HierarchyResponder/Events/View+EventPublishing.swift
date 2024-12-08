@@ -7,8 +7,13 @@
 
 import SwiftUI
 
+/**
+ WARNING: The `publisher` and `subscribe` modifiers are experimental features
+ */
+
 public extension View {
 	/**
+	 EXPERIMENTAL.
 	 Publishing events enables sending events to views that are lower in the view
 	 hierarchy. This can be really useful when working with events that are
 	 originated from outside of the view hierarchy, like menu bar actions, intents,
@@ -37,6 +42,7 @@ public extension View {
 	}
 	
 	/**
+	 EXPERIMENTAL.
 	 Subscribing to an event will cause the hadler closure to be executed when an
 	 event is published, as long as the current subscriber matches the event's
 	 destination.

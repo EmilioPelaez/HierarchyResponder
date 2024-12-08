@@ -9,6 +9,14 @@ import SwiftUI
 
 typealias RegistrarDictionary = [ObjectIdentifier: EventSubscriptionRegistrar]
 
+/**
+ The `EventPublisherModifier` introduces a "registrar" into the environment
+ associated with the event type, this registrar enables for views down the
+ chain to register an `EventPublisher`. Once this happens the publishers are
+ passed to the caller of the modifier via the `register` closure.
+ This object can then publish events by executing the closure in the
+ `EventPublisher`.
+ */
 struct EventPublisherModifier<E: Event>: ViewModifier {
 	@Environment(\.eventSubscriptionRegistrars) var registrars
 	@Environment(\.responderSafetyLevel) var safetyLevel
