@@ -1,26 +1,40 @@
-name: tests
+name: Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   run-tests:
     runs-on: macos-latest
+    
     steps:
-    - uses: actions/checkout@v2
-    - name: List available Xcode versions
-      run: ls /Applications | grep Xcode
-    - name: Select Xcode
-      run: sudo xcode-select -switch /Applications/Xcode_16.1.app && /usr/bin/xcodebuild -version
-    - name: Show path
-      run: pwd; ls
-    - name: Show Destinations
-      run: xcodebuild -showdestinations -scheme HierarchyResponderTests -project Tests/HierarchyResponderTests.xcodeproj | xcpretty
-    - name: Run unit tests
-      run: |
-          xcodebuild test -scheme HierarchyResponderTests -project Tests/HierarchyResponderTests.xcodeproj -destination "platform=iOS Simulator,name=iPhone 15" -derivedDataPath Build/ | xcpretty
-          cd Build/Build/ProfileData
-          cd $(ls -d */|head -n 1)
-          directory=${PWD##*/}
-          pathCoverage=Build/Build/ProfileData/${directory}/Coverage.profdata
-          cd ../../../../
-          xcrun llvm-cov export -format="lcov" -instr-profile $pathCoverage Build/Build/Products/Debug-iphonesimulator/HierarchyResponderTests.app/HierarchyResponderTests > info.lcov
-          bash <(curl https://codecov.io/bash)
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Apple Xcode Select
+      uses: BoundfoxStudios/action-xcode-select@v1
+      with:
+        version: latest
+        beta: false
+
+    - name: Test
+      uses: sersoft-gmbh/xcodebuild-action@v3
+      with:
+        project: Tests/HierarchyResponderTests.xcodeproj
+        scheme: HierarchyResponderTests
+        destination: platform=iOS Simulator,name=iPhone 15
+        action: test
+        derived-data-path: DerivedData
+        enable-code-coverage: true
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        directory: Tests
