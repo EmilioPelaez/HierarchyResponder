@@ -27,9 +27,9 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 	@State var registrar: EventSubscriptionRegistrar
 	@State var container: PublishersContainer?
 	
-	var updatedRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
+	var updatedRegistrars: [ObjectIdentifier: [EventSubscriptionRegistrar]] {
 		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrar
+		registrars[ObjectIdentifier(E.self)] = registrars[ObjectIdentifier(E.self), default: []] + [registrar]
 		return registrars
 	}
 	
@@ -68,10 +68,10 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 		}
 		let publishers = container?.publishers ?? []
 		let container = PublishersContainer(publishers: [publisher] + publishers)
-		registrar.register(container)
+		registrar.forEach { $0.register(container) }
 	}
 	
 	func unregisterPublisher() {
-		registrars[ObjectIdentifier(E.self)]?.register(nil)
+		registrars[ObjectIdentifier(E.self)]?.forEach { $0.register(nil) }
 	}
 }

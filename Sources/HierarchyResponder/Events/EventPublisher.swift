@@ -32,13 +32,14 @@ public enum PublishingDestination {
  ```
  */
 public struct EventPublisher<T: Event>: Identifiable, Equatable {
-	public let id: UUID = .init()
+	public let id: String
 	
 	static var empty: Self { .init { _ in } }
 	
 	public let publish: (T) -> Void
 	
-	init(publish: @escaping (T) -> Void) {
+	init(id: String = UUID().uuidString, publish: @escaping (T) -> Void) {
+		self.id = id
 		self.publish = publish
 	}
 	

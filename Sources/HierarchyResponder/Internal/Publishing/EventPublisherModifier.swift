@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-typealias RegistrarDictionary = [ObjectIdentifier: EventSubscriptionRegistrar]
+typealias RegistrarDictionary = [ObjectIdentifier: [EventSubscriptionRegistrar]]
 
 /**
  The `EventPublisherModifier` introduces a "registrar" into the environment
@@ -27,9 +27,9 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	@State var registrar: EventSubscriptionRegistrar
 	@State var container: PublishersContainer?
 	
-	var updatedRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
+	var updatedRegistrars: [ObjectIdentifier: [EventSubscriptionRegistrar]] {
 		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrar
+		registrars[ObjectIdentifier(E.self)] = registrars[ObjectIdentifier(E.self), default: []] + [registrar]
 		return registrars
 	}
 	
@@ -41,7 +41,6 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	
 	func body(content: Content) -> some View {
 		content
-			.onAppearAndChange(of: registrars, perform: verifyPublisher)
 			.onAppear(perform: createRegistrar)
 			.onChange(of: container) { container in
 				updatePublisher(container: container, destination: destination)
@@ -55,14 +54,6 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	
 	func createRegistrar() {
 		registrar = .init { container = $0 }
-	}
-	
-	func verifyPublisher(_ registrars: RegistrarDictionary) {
-		if registrars[ObjectIdentifier(E.self)] == nil { return }
-		switch safetyLevel {
-		case .strict, .relaxed: print("Registrating duplicate publisher for event \(String(describing: E.self)). This may lead to unexpected behavior.")
-		case .disabled: break
-		}
 	}
 	
 	func updatePublisher(container: PublishersContainer?, destination: PublishingDestination) {

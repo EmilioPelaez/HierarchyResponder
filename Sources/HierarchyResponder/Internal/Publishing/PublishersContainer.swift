@@ -9,7 +9,7 @@ import Foundation
 
 struct PublishersContainer: Identifiable, Equatable {
 	var id: UUID = .init()
-	let publishers: [EventPublisherProtocol]
+	let publishers: [any EventPublisherProtocol]
 	
 	static func == (lhs: PublishersContainer, rhs: PublishersContainer) -> Bool {
 		lhs.id == rhs.id
