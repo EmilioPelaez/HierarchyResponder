@@ -11,50 +11,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    
-    - name: Apple Xcode Select
-      uses: BoundfoxStudios/action-xcode-select@v1
-      with:
-        version: latest
-        beta: false
-    
-    - name: Build iOS
-      uses: sersoft-gmbh/xcodebuild-action@v3
-      with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExample
-        destination: generic/platform=iOS Simulator
-        action: build
 
-    - name: Build tvOS
-      uses: sersoft-gmbh/xcodebuild-action@v3
+    - name: Build Apple Platforms Action
+      uses: EmilioPelaez/build-apple-platforms@main
       with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExample
-        destination: generic/platform=tvOS Simulator
-        action: build
-
-    - name: Build macOS
-      uses: sersoft-gmbh/xcodebuild-action@v3
-      with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExample
-        destination: generic/platform=macOS
-        action: build
-        build-settings: CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-
-    - name: Build visionOS
-      uses: sersoft-gmbh/xcodebuild-action@v3
-      with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExample
-        destination: generic/platform=visionOS Simulator
-        action: build
-
-    - name: Build watchOS
-      uses: sersoft-gmbh/xcodebuild-action@v3
-      with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExampleWatch
-        destination: generic/platform=watchOS Simulator
-        action: build
+        project: 'Example/HierarchyResponderExample.xcodeproj'
+        scheme: 'HierarchyResponderExample'
+        watch_scheme: 'HierarchyResponderExampleWatch'
