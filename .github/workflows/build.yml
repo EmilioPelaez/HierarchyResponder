@@ -26,8 +26,14 @@ jobs:
         destination: generic/platform=iOS Simulator
         action: build
 
-    - name: Build Mac Raw
-      run: swift build
+    - name: Build Mac
+      uses: sersoft-gmbh/xcodebuild-action@v3
+      with:
+        project: Example/HierarchyResponderExample.xcodeproj
+        scheme: HierarchyResponderExample
+        destination: generic/platform=macOS
+        action: build
+        build-settings: CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
     - name: Build Watch
       uses: sersoft-gmbh/xcodebuild-action@v3
