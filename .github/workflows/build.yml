@@ -42,3 +42,11 @@ jobs:
         scheme: HierarchyResponderExampleWatch
         destination: generic/platform=watchOS Simulator
         action: build
+
+    - name: Build Vision
+      uses: sersoft-gmbh/xcodebuild-action@v3
+      with:
+        project: Example/HierarchyResponderExample.xcodeproj
+        scheme: HierarchyResponderExample
+        destination: generic/platform=visionOS Simulator
+        action: build
