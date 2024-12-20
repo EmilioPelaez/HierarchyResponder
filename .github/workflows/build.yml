@@ -22,7 +22,6 @@ jobs:
       uses: sersoft-gmbh/xcodebuild-action@v3
       with:
         project: Example/HierarchyResponderExample.xcodeproj
-        workspace:
         scheme: HierarchyResponderExample
         destination: generic/platform=iOS Simulator
         action: build
