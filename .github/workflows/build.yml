@@ -26,7 +26,15 @@ jobs:
         destination: generic/platform=iOS Simulator
         action: build
 
-    - name: Build Mac
+    - name: Build tvOS
+      uses: sersoft-gmbh/xcodebuild-action@v3
+      with:
+        project: Example/HierarchyResponderExample.xcodeproj
+        scheme: HierarchyResponderExample
+        destination: generic/platform=tvOS Simulator
+        action: build
+
+    - name: Build macOS
       uses: sersoft-gmbh/xcodebuild-action@v3
       with:
         project: Example/HierarchyResponderExample.xcodeproj
@@ -35,18 +43,18 @@ jobs:
         action: build
         build-settings: CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
-    - name: Build Watch
-      uses: sersoft-gmbh/xcodebuild-action@v3
-      with:
-        project: Example/HierarchyResponderExample.xcodeproj
-        scheme: HierarchyResponderExampleWatch
-        destination: generic/platform=watchOS Simulator
-        action: build
-
-    - name: Build Vision
+    - name: Build visionOS
       uses: sersoft-gmbh/xcodebuild-action@v3
       with:
         project: Example/HierarchyResponderExample.xcodeproj
         scheme: HierarchyResponderExample
         destination: generic/platform=visionOS Simulator
+        action: build
+
+    - name: Build watchOS
+      uses: sersoft-gmbh/xcodebuild-action@v3
+      with:
+        project: Example/HierarchyResponderExample.xcodeproj
+        scheme: HierarchyResponderExampleWatch
+        destination: generic/platform=watchOS Simulator
         action: build
