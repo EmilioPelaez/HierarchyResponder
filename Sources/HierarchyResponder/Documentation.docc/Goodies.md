@@ -25,3 +25,10 @@ The `onTapGesture(trigger:)` modifier works just like `onTapGesture(perform:)`, 
 `AlertableError` is a protocol that conforms to Error and represents a user-friendly error with a message and an optional title.
 
 By using the `.handleAlertErrors()` modifier, errors that conform to the `AlertableError` protocol will be handled by displaying an alert with the title and message provided by the error.
+
+## Topics
+
+- ``EventButton``
+- ``SwiftUICore/View/onTapGesture(count:trigger:)``
+- ``AlertableError``
+- ``SwiftUICore/View/handleAlertErrors()``

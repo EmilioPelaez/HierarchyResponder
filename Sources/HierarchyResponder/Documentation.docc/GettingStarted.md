@@ -65,3 +65,12 @@ struct ContentView: View {
 
 ## Topics
 
+### Events
+
+- ``SwiftUICore/EnvironmentValues/triggerEvent``
+- ``SwiftUICore/View/handleEvent(_:handler:)-2lm98``
+
+### Errors
+
+- ``SwiftUICore/EnvironmentValues/reportError``
+- ``SwiftUICore/View/handleError(_:handler:)-3n403``

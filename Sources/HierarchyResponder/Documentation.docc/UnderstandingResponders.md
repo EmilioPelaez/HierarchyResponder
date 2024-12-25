@@ -124,3 +124,32 @@ struct ContentView: View {
   }
 }
 ```
+
+## Topics
+
+### Receiving Events and Errors
+
+- ``SwiftUICore/View/receiveEvent(_:)``
+- ``SwiftUICore/View/receiveEvent(_:closure:)-6l11u``
+- ``SwiftUICore/View/receiveError(_:)``
+- ``SwiftUICore/View/receiveError(_:closure:)-9lqgx``
+
+### Handling Events and Errors
+
+- ````
+- ``SwiftUICore/View/handleEvent(_:)``
+- ``SwiftUICore/View/handleEvent(_:handler:)-2lm98``
+- ``SwiftUICore/View/handleError(_:)``
+- ``SwiftUICore/View/handleError(_:handler:)-3n403``
+
+### Transforming Events and Errors
+
+- ``SwiftUICore/View/transformEvent(_:)``
+- ``SwiftUICore/View/transformEvent(_:transform:)-8qt1d``
+- ``SwiftUICore/View/transformError(_:)``
+- ``SwiftUICore/View/transformError(_:transform:)-22chc``
+
+### Recovering from Errors
+
+- ``SwiftUICore/View/catchError(_:)``
+- ``SwiftUICore/View/catchError(_:handler:)-8s21e``

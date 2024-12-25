@@ -19,3 +19,10 @@ struct FeedView: View {
 These modifiers are not only useful for the developer consuming the `FeedView` object, they also act as a runtime check that will raise a warning if an event or error that is not on the list is utilized, and when explicit responders are required (enabled by default) it will raise a warning if there are no responders for these specific events and errors above in the hierarchy.
 
 The `.responderSafetyLevel` and `.requireExplicitResponders` modifiers allow customization of the behavior of the safety checks. The default responder safety level will throw console warnings, the strict safety level will trigger a `fatalError`, and the disabled safety level will ignore any infractions. All of these checks are disabled on release builds, to avoid causing crashes for users.
+
+## Topics
+
+- ``SwiftUICore/View/triggers(_:file:line:)``
+- ``SwiftUICore/View/reports(_:file:line:)``
+- ``SwiftUICore/View/responderSafetyLevel(_:)``
+- ``SwiftUICore/View/requireExplicitResponders(_:)``

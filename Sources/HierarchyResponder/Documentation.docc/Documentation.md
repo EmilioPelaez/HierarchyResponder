@@ -55,8 +55,15 @@ struct ItemView: View {
 }
 ```
 
+## Read Next
+
 @Links(visualStyle: detailedGrid) {
 	- <doc:GettingStarted>
+}
+
+## Dig Deeper
+
+@Links(visualStyle: detailedGrid) {
 	- <doc:UnderstandingResponders>
 	- <doc:PublishedEvents>
 	- <doc:Goodies>
