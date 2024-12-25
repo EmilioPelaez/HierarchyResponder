@@ -1,11 +1,12 @@
 # Hierarchy Responder
 
+[![Swift 5.10](https://img.shields.io/badge/swift-5.10-orange.svg?style=flat)](https://developer.apple.com/swift)
+[![Platforms](https://img.shields.io/badge/platforms-iOS,macOS,tvOS,watchOS,visionOS-lightgray.svg)]()
+
 [![tests](https://github.com/EmilioPelaez/HierarchyResponder/actions/workflows/tests.yml/badge.svg)](https://github.com/EmilioPelaez/HierarchyResponder/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/EmilioPelaez/HierarchyResponder/branch/main/graph/badge.svg?token=05Y9RYF45B)](https://codecov.io/gh/EmilioPelaez/HierarchyResponder)
-[![Platforms](https://img.shields.io/badge/platforms-iOS%20|%20macOS%20|%20tvOS%20%20|%20watchOS-lightgray.svg)]()
-[![Swift 5.6](https://img.shields.io/badge/swift-5.6-orange.svg?style=flat)](https://developer.apple.com/swift)
+
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
-[![Twitter](https://img.shields.io/badge/twitter-@emiliopelaez-blue.svg)](http://twitter.com/emiliopelaez)
 
 `HierarchyResponder` is a framework designed to use the SwiftUI view hierarchy as a responder chain for event and error handling handling. By using the view hierarchy to report errors and trigger events, views can become more indepentent without sacrificing communication with other views.
 
