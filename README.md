@@ -2,8 +2,8 @@
 
 <img src="SocialImage.png" alt="Social Banner" width="640">
 
-[![Swift 5.10](https://img.shields.io/badge/swift-5.10-orange.svg?style=flat)](https://developer.apple.com/swift)
-[![Platforms](https://img.shields.io/badge/platforms-iOS,macOS,tvOS,watchOS,visionOS-lightgray.svg)]()
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FEmilioPelaez%2FHierarchyResponder%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/EmilioPelaez/HierarchyResponder)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FEmilioPelaez%2FHierarchyResponder%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/EmilioPelaez/HierarchyResponder)
 
 [![tests](https://github.com/EmilioPelaez/HierarchyResponder/actions/workflows/tests.yml/badge.svg)](https://github.com/EmilioPelaez/HierarchyResponder/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/EmilioPelaez/HierarchyResponder/branch/main/graph/badge.svg?token=05Y9RYF45B)](https://codecov.io/gh/EmilioPelaez/HierarchyResponder)
