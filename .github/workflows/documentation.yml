@@ -1,0 +1,52 @@
+name: Deploy Documentation
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+# Set permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages.
+permissions:
+  contents: read
+  id-token: write
+  pages: write
+
+# Allow one concurrent deployment. Do not cancel in-flight deployments because we don't want assets to be in a
+# a semi-deployed state.
+concurrency: 
+  group: "documentation"
+  cancel-in-progress: false
+
+jobs:
+  deploy-documentation:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set Up GitHub Pages
+        uses: actions/configure-pages@v3
+      - name: Build Documentation
+        run: |
+          xcodebuild docbuild \
+            -scheme HierarchyResponder \
+            -derivedDataPath ./build \
+            -destination 'generic/platform=iOS';
+          mkdir public;
+          $(xcrun --find docc) process-archive \
+            transform-for-static-hosting ./build/Build/Products/Debug-iphoneos/HierarchyResponder.doccarchive \
+            --hosting-base-path HierarchyResponder \
+            --output-path ./public;
+      - name: Create index.html
+        run: |
+          echo "<script>window.location.href += \"/documentation/hierarchyresponder\"</script>" > ./public/index.html;
+      - name: Upload Documentation Artifact to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: public
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

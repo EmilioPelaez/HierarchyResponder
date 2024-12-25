@@ -11,7 +11,12 @@ struct ErrorClosureEnvironmentKey: EnvironmentKey {
 }
 
 struct EventClosureEnvironmentKey: EnvironmentKey {
-	static var defaultValue: TriggerEvent = .init { _ in }
+	static var defaultValue: TriggerEvent = .init { event in
+		guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else {
+			return
+		}
+		assertionFailure("Unhandled Event \(event)")
+	}
 }
 
 struct ResponderSafetyLevelKey: EnvironmentKey {
