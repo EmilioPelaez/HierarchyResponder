@@ -1,10 +1,6 @@
 # Hierarchy Responder
 
-![Social Banner](SocialImage.png)
-
-<p align="center">
-  <img src="SocialImage.png" alt="Social Banner" width="640" style="border-radius: 10%;">
-</p>
+<img src="SocialImage.png" alt="Social Banner" width="640">
 
 [![Swift 5.10](https://img.shields.io/badge/swift-5.10-orange.svg?style=flat)](https://developer.apple.com/swift)
 [![Platforms](https://img.shields.io/badge/platforms-iOS,macOS,tvOS,watchOS,visionOS-lightgray.svg)]()
