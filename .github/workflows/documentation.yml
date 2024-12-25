@@ -32,16 +32,19 @@ jobs:
       - name: Set Up GitHub Pages
         uses: actions/configure-pages@v3
       - name: Build Documentation
-        uses: fwcd/swift-docc-action@v1
-        with:
-          target: HierarchyResponder
-          output: build
-          transform-for-static-hosting: 'true'
-          disable-indexing: 'true'
-          hosting-base-path: public
+        run: |
+          xcodebuild docbuild \
+            -scheme HierarchyResponder \
+            -derivedDataPath ./build \
+            -destination 'generic/platform=iOS';
+          mkdir public;
+          $(xcrun --find docc) process-archive \
+            transform-for-static-hosting ./build/Build/Products/Debug-iphoneos/HierarchyResponder.doccarchive \
+            --hosting-base-path HierarchyResponder \
+            --output-path ./public;
       - name: Create index.html
         run: |
-          echo "<script>window.location.href += \"/documentation/hierarchyresponder\"</script>" > public/index.html;
+          echo "<script>window.location.href += \"/documentation/hierarchyresponder\"</script>" > ./public/index.html;
       - name: Upload Documentation Artifact to GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
