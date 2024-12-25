@@ -10,7 +10,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
 
-`HierarchyResponder` is a framework designed to use the SwiftUI view hierarchy as a responder chain for event and error handling. By using the view hierarchy to report errors and trigger events, views can become more indepentent without sacrificing communication with other views.
+`HierarchyResponder` is a framework that allows you to use the SwiftUI view hierarchy as a responder chain for event and error handling. By using the view hierarchy to report errors and trigger events, views can become more indepentent without sacrificing communication with other views.
 
 To report an error or trigger an event, a view reads a closure from the environment, and calls that closure with the event or error as a parameter.
 
@@ -61,13 +61,9 @@ struct ItemView: View {
 }
 ```
 
-## Overview
+## Getting Started
 
-HierarchyResponder provides an alternative to common methods of handling interaction on child views in SwiftUI. Instead of prop drilling with action closures, or injecting state objects into the environment that create heavy dependencies for child views, or creating external dependency containers that act as complex singletons, views that contain logic can register "responder" closures that will be called when a descendant view triggers an event or reports an error.
-
-Any views that happen to be between the interactive view and the view that receives the event have no part in this communication between views. The interactive view can adopt a fire-and-forget model that allows it to be free of logic, lighter, and easier to preview. The view hierarchy can be easily altered without adjusting parameters like it would be necessary when doing prop drilling.
-
-Just like when using an `EnvironmentObject`, the compiler can't tell if a responder has been registered for a given event, but an important difference is that failing to respond to an event will only cause a crash when building for `DEBUG`, and when the view is **not** in being previewed. This frees views of having a strong dependency on environment objects.
+The basics to understand how to use the hierarchy responder pattern.
 
 ### The Event Protocol
 
@@ -111,22 +107,36 @@ struct TriggerView: View {
 }
 ```
 
-### What's a Responder
+### Handling an Event
 
-Responders are closures that "respond" in different ways to events or errors being triggered or reported by a view down in the view hierarchy.
-
-There's several kinds of responders, and each responder has two versions, one that will respond to any kind of event or error, and one that receives the type of an event or error as the first parameter and will only act on values of that type.
+Events and Errors are handled using one of the multiple responders. The `.handleEvent` responder below, for example, receives only events of the type `MyEvent`.
 
 ```swift
 struct ContentView: View {
   var body: some View {
     TriggerView()
-      .handleEvent(MyEvent.self) {
-      //  Only events of the type MyEvent will be handled
+      .handleEvent(MyEvent.self) { event in
+        //  Do something with event
       }
-      .handleEvent {
-      //  All event types will be handled here
-      }
+  }
+}
+```
+
+## Understanding Responders
+
+Using responders to receive or handle events and errors.
+
+### What are responders?
+
+Responders are closures that "respond" in different ways to events or errors being triggered or reported by a view down in the view hierarchy.
+
+```swift
+struct ContentView: View {
+  var body: some View {
+    TriggerView()
+      .handleEvent(MyEvent.self) { event in
+      //  Do something with event
+    }
   }
 }
 ```
@@ -152,6 +162,12 @@ struct ContentView: View {
   }
 }
 ```
+
+### Different Kinds of Responders
+
+There's several kinds of responders, and each responder has two versions, one that will respond to any kind of event or error, and one that receives the type of an event or error as the first parameter and will only act on values of that type.
+
+It is recommended to use explicit responders, aka responders that specify the type of the event or error they will receive. Doing this in combination with the safety modifiers will perform runtime checks and warn you when an event or error doesn't have an associated responder. 
 
 #### Receiving an Event or Error
 
@@ -232,7 +248,19 @@ struct ContentView: View {
 }
 ```
 
-### Safety
+## External Events
+
+Handling events that are originated outside the View Hierarchy
+
+The `triggerEvent` can be used to handle events that are originated within the view hierarchy, but some events, like menu bar actions, intents, deep linking, navigation events, shake events, etc. can originate from outside of the view hierarchy, and it can be tricky to make sure they're delivered to the right view.
+
+The `.publisher` view modifier generates an `EventPublisher` object that can be used to publish an event that will traverse the view hierarchy "downwards", allowing us to, by default, find the last subscriber to the event.
+
+For example, imagine you have multiple views listening to shake events via NotificationCenter, but as the user navigates through the app, some of these views may not be on screen but still be present in the view hierarchy. You could listen to the NotificationCenter event at the root of your app and publish an event that will only be delivered to the last subscriber, which would be the view that is currently on screen.
+
+## Safety
+
+Best practices to avoid unhandled events and errors
 
 A trade-off of the flexibility offered by this pattern is that it can be easy to lose track of where events are generated and handled. A few modifiers are included to mitigate this.
 
@@ -252,24 +280,29 @@ These modifiers are not only useful for the developer consuming the `FeedView` o
 
 The `.responderSafetyLevel` and `.requireExplicitResponders` modifiers allow customization of the behavior of the safety checks. The default responder safety level will throw console warnings, the strict safety level will trigger a `fatalError`, and the disabled safety level will ignore any infractions. All of these checks are disabled on release builds, to avoid causing crashes for users.
 
-### Events originating outside the View Hierarchy
-The `triggerEvent` can be used to handle events that are originated within the view hierarchy, but some events, like menu bar actions, intents, deep linking, navigation events, shake events, etc. can originate from outside of the view hierarchy, and it can be tricky to make sure they're delivered to the right view.
+## Goodies
 
-The `.publisher` view modifier generates an `EventPublisher` object that can be used to publish an event that will traverse the view hierarchy "downwards", allowing us to, by default, find the last subscriber to the event.
+Small utilities to make things easier.
 
-For example, imagine you have multiple views listening to shake events via NotificationCenter, but as the user navigates through the app, some of these views may not be on screen but still be present in the view hierarchy. You could listen to the NotificationCenter event at the root of your app and publish an event that will only be delivered to the last subscriber, which would be the view that is currently on screen.
-
-### Other Goodies
-
-#### EventButton
+### EventButton
 
 `EventButton` is essentially a wrapper for `Button` that receives, instead of an action closure, an `Event` that is triggered whenever the underlying Button's action would be called.
 
-#### onTapGesture(trigger:)
+```swift
+// Before:
+Button("Tap Me") {
+  //  Perform action
+}
+
+// After:
+EventButton("Tap Me", event: MyEvent())
+```
+
+### onTapGesture(trigger:)
 
 The `onTapGesture(trigger:)` modifier works just like `onTapGesture(perform:)`, but instead of executing a closure it triggers an event.
 
-#### AlertableErrors
+### AlertableErrors
 
 `AlertableError` is a protocol that conforms to Error and represents a user-friendly error with a message and an optional title.
 
