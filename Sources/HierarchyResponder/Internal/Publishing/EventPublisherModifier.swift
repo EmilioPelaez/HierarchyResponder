@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-typealias RegistrarDictionary = [ObjectIdentifier: [EventSubscriptionRegistrar]]
+typealias RegistrarDictionary = [ObjectIdentifier: EventSubscriptionRegistrar]
 
 /**
  The `EventPublisherModifier` introduces a "registrar" into the environment
@@ -45,21 +45,26 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	}
 	
 	func updatePublisher(containers: Set<PublishersContainer>, destination: PublishingDestination) {
-		print(containers)
-//		let publishers = container?.publishers.compactMap { $0 as? EventPublisher<E> } ?? []
-//		guard !publishers.isEmpty else { return register(nil) }
-//		print("Publishers", publishers.count, publishers.map(\.id))
-//		let publisher: EventPublisher<E>?
-//		switch destination {
-//		case .firstSubscriber:
-//			publisher = publishers.first
-//		case .allSubscribers:
-//			publisher = .init { event in
-//				publishers.forEach { $0.publish(event) }
-//			}
-//		case .lastSubscriber:
-//			publisher = publishers.last
-//		}
-//		register(publisher)
+		guard !containers.isEmpty else { return register(nil) }
+		let publishers: [any EventPublisherProtocol]
+		switch destination {
+		case .firstSubscriber:
+			publishers = containers.map(\.publisher)
+		case .allSubscribers:
+			let allContainers = containers.flatMap(\.allContainers)
+			publishers = allContainers.map(\.publisher)
+		case .lastSubscriber:
+			fatalError()
+		}
+		let filteredPublishers = publishers.compactMap { $0 as? EventPublisher<E> }
+		guard filteredPublishers.count == publishers.count else {
+			assertionFailure("Some publishers were droped")
+			return
+		}
+		let publisher = EventPublisher<E>(id: id) { event in
+			filteredPublishers.forEach { $0.publish(event) }
+		}
+		register(publisher)
+		print("Registered \(filteredPublishers.count) publishers with IDs \(filteredPublishers.map(\.id))")
 	}
 }

@@ -24,9 +24,9 @@ struct PublisherRegistrarModifier<E: Event>: ViewModifier {
 		self._childContainers = childContainers
 	}
 	
-	var updatedRegistrars: [ObjectIdentifier: [EventSubscriptionRegistrar]] {
+	var updatedRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
 		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrars[ObjectIdentifier(E.self), default: []] + [registrar]
+		registrars[ObjectIdentifier(E.self)] = registrar
 		return registrars
 	}
 	

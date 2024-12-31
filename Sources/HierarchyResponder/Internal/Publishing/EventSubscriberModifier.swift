@@ -54,11 +54,10 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 			}
 		}
 		let container = PublishersContainer(id: id, publisher: publisher, containers: containers)
-		print("Registering \(container) container")
-		registrar.forEach { $0.register(container.id, container) }
+		registrar.register(container.id, container)
 	}
 	
 	func unregisterPublisher() {
-		registrars[ObjectIdentifier(E.self)]?.forEach { $0.register(id, nil) }
+		registrars[ObjectIdentifier(E.self)]?.register(id, nil)
 	}
 }

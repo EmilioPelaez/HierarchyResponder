@@ -18,6 +18,10 @@ struct PublishersContainer: Identifiable, Equatable, Hashable {
 		self.containers = containers
 	}
 	
+	var allContainers: Set<PublishersContainer> {
+		Set([self] + containers.flatMap(\.allContainers))
+	}
+	
 	static func == (lhs: PublishersContainer, rhs: PublishersContainer) -> Bool {
 		lhs.id == rhs.id
 	}
