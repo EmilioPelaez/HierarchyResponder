@@ -54,7 +54,8 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 			let allContainers = containers.flatMap(\.allContainers)
 			publishers = allContainers.map(\.publisher)
 		case .lastSubscriber:
-			fatalError()
+			let lastContainers = lastContainers(in: containers)
+			publishers = lastContainers.map(\.publisher)
 		}
 		let filteredPublishers = publishers.compactMap { $0 as? EventPublisher<E> }
 		guard filteredPublishers.count == publishers.count else {
@@ -65,6 +66,34 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 			filteredPublishers.forEach { $0.publish(event) }
 		}
 		register(publisher)
-		print("Registered \(filteredPublishers.count) publishers with IDs \(filteredPublishers.map(\.id))")
+	}
+	
+	func lastContainers(in containers: Set<PublishersContainer>) -> Set<PublishersContainer> {
+		var lastContainers: Set<PublishersContainer> = []
+		var depth = 0
+		func recursion(_ containers: Set<PublishersContainer>, level: Int) {
+			guard !containers.isEmpty else { return }
+			if depth == level {
+				lastContainers.formUnion(containers)
+			} else if level > depth {
+				lastContainers = containers
+				depth = level
+			}
+			
+			containers
+				.map { ($0.containers, level + 1) }
+				.forEach(recursion)
+		}
+		
+		recursion(containers, level: 0)
+		
+		return lastContainers
+	}
+}
+
+public extension Array {
+	subscript(safe index: Index) -> Element? {
+		guard index >= 0, index < count else { return nil }
+		return self[index]
 	}
 }
