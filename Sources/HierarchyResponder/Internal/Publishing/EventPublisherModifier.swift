@@ -48,12 +48,12 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 		guard !containers.isEmpty else { return register(nil) }
 		let publishers: [any EventPublisherProtocol]
 		switch destination {
-		case .firstSubscriber:
+		case .firstLevel:
 			publishers = containers.map(\.publisher)
-		case .allSubscribers:
+		case .allLevels:
 			let allContainers = containers.flatMap(\.allContainers)
 			publishers = allContainers.map(\.publisher)
-		case .lastSubscriber:
+		case .lastLevel:
 			let lastContainers = lastContainers(in: containers)
 			publishers = lastContainers.map(\.publisher)
 		}

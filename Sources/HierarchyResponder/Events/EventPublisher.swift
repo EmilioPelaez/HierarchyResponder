@@ -11,12 +11,31 @@ import SwiftUI
  `PublishingDestination` is used in the `.publisher` view modifier to specify
  which publishers should receive the event.
  
- The order is determined by the order they are declared in the view hierarchy.
+ The "level" of each value refers to the depth of the subscriber in the view
+ hierarchy, the first level being the subscribers declared closest to the
+ publisher.
+ 
+ Using container views (like Group, etc.) will create multiple subscribers at
+ the same level. For example, adding a `.subscribe` modifier to all the cells
+ in a list could cause all of them to share the last/deepest level of
+ subscribers in the hierarchy.
+ 
+ The order in which subscribers are called when publishing an event is not
+ guaranteed to be stable.
  */
 public enum PublishingDestination {
-	case firstSubscriber
-	case allSubscribers
-	case lastSubscriber
+	/**
+	 Publishers at the shallowest level of the hierarchy
+	 */
+	case firstLevel
+	/**
+	 Publishers at all the levels of the hierarchy
+	 */
+	case allLevels
+	/**
+	 Publishers at the deepest level of the hierarchy
+	 */
+	case lastLevel
 }
 
 /**

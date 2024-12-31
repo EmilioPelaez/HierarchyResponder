@@ -37,7 +37,7 @@ public extension View {
 	 once it's published. The order of the subscribers is determined by the order
 	 in which they were added to the view hierarchy.
 	 */
-	func publisher<E: Event>(for event: E.Type, id: String, destination: PublishingDestination = .lastSubscriber, register: @escaping (EventPublisher<E>?) -> Void) -> some View {
+	func publisher<E: Event>(for event: E.Type, id: String, destination: PublishingDestination = .lastLevel, register: @escaping (EventPublisher<E>?) -> Void) -> some View {
 		modifier(EventPublisherModifier(id: id, destination: destination, register: register))
 	}
 	
