@@ -23,41 +23,28 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 	@Environment(\.eventSubscriptionRegistrars) var registrars
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
+	let id: String
 	let publisher: EventPublisher<E>
-	@State var registrar: EventSubscriptionRegistrar
-	@State var container: PublishersContainer?
+	@State var containers: Set<PublishersContainer> = []
 	
-	var updatedRegistrars: [ObjectIdentifier: [EventSubscriptionRegistrar]] {
-		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrars[ObjectIdentifier(E.self), default: []] + [registrar]
-		return registrars
-	}
-	
-	init(eventType: E.Type, handler: @escaping (E) -> Void) {
-		publisher = .init(publish: handler)
-		self.registrar = .init { _ in }
+	init(id: String, eventType: E.Type, handler: @escaping (E) -> Void) {
+		self.id = id
+		publisher = .init(id: id, publish: handler)
 	}
 	
 	func body(content: Content) -> some View {
 		content
-			.onAppear(perform: createRegistrar)
+			.publisherRegistrar(for: E.self, childContainers: $containers)
 			.onAppearAndChange(of: registrars) { registrars in
-				registerPublisher(registrars, container: container)
+				registerPublisher(registrars, containers: containers)
 			}
-			.onAppearAndChange(of: container) { container in
-				registerPublisher(registrars, container: container)
+			.onAppearAndChange(of: containers) { containers in
+				registerPublisher(registrars, containers: containers)
 			}
 			.onDisappear(perform: unregisterPublisher)
-			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
 	}
 	
-	func createRegistrar() {
-		registrar = .init {
-			container = $0
-		}
-	}
-	
-	func registerPublisher(_ registrars: RegistrarDictionary, container: PublishersContainer?) {
+	func registerPublisher(_ registrars: RegistrarDictionary, containers: Set<PublishersContainer>) {
 		guard let registrar = registrars[ObjectIdentifier(E.self)] else {
 			let message = "Subscribed to event with no publisher: \(String(describing: E.self))"
 			switch safetyLevel {
@@ -66,12 +53,12 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 			case .disabled: return
 			}
 		}
-		let publishers = container?.publishers ?? []
-		let container = PublishersContainer(publishers: [publisher] + publishers)
-		registrar.forEach { $0.register(container) }
+		let container = PublishersContainer(id: id, publisher: publisher, containers: containers)
+		print("Registering \(container) container")
+		registrar.forEach { $0.register(container.id, container) }
 	}
 	
 	func unregisterPublisher() {
-		registrars[ObjectIdentifier(E.self)]?.forEach { $0.register(nil) }
+		registrars[ObjectIdentifier(E.self)]?.forEach { $0.register(id, nil) }
 	}
 }

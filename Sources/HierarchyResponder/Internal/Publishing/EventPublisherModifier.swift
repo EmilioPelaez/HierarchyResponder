@@ -18,58 +18,48 @@ typealias RegistrarDictionary = [ObjectIdentifier: [EventSubscriptionRegistrar]]
  `EventPublisher`.
  */
 struct EventPublisherModifier<E: Event>: ViewModifier {
-	@Environment(\.eventSubscriptionRegistrars) var registrars
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
+	let id: String
 	let destination: PublishingDestination
 	let register: (EventPublisher<E>?) -> Void
 	
-	@State var registrar: EventSubscriptionRegistrar
-	@State var container: PublishersContainer?
+	@State var containers: Set<PublishersContainer> = []
 	
-	var updatedRegistrars: [ObjectIdentifier: [EventSubscriptionRegistrar]] {
-		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrars[ObjectIdentifier(E.self), default: []] + [registrar]
-		return registrars
-	}
-	
-	init(destination: PublishingDestination, register: @escaping (EventPublisher<E>?) -> Void) {
+	init(id: String = UUID().uuidString, destination: PublishingDestination, register: @escaping (EventPublisher<E>?) -> Void) {
+		self.id = id
 		self.destination = destination
 		self.register = register
-		self.registrar = .init { _ in }
 	}
 	
 	func body(content: Content) -> some View {
 		content
-			.onAppear(perform: createRegistrar)
-			.onChange(of: container) { container in
-				updatePublisher(container: container, destination: destination)
+			.publisherRegistrar(for: E.self, childContainers: $containers)
+			.onChange(of: containers) { containers in
+				updatePublisher(containers: containers, destination: destination)
 			}
 			.onChange(of: destination) { destination in
-				updatePublisher(container: container, destination: destination)
+				updatePublisher(containers: containers, destination: destination)
 			}
 			.onDisappear { register(nil) }
-			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
 	}
 	
-	func createRegistrar() {
-		registrar = .init { container = $0 }
-	}
-	
-	func updatePublisher(container: PublishersContainer?, destination: PublishingDestination) {
-		let publishers = container?.publishers.compactMap { $0 as? EventPublisher<E> } ?? []
-		guard !publishers.isEmpty else { return register(nil) }
-		let publisher: EventPublisher<E>?
-		switch destination {
-		case .firstSubscriber:
-			publisher = publishers.first
-		case .allSubscribers:
-			publisher = .init { event in
-				publishers.forEach { $0.publish(event) }
-			}
-		case .lastSubscriber:
-			publisher = publishers.last
-		}
-		register(publisher)
+	func updatePublisher(containers: Set<PublishersContainer>, destination: PublishingDestination) {
+		print(containers)
+//		let publishers = container?.publishers.compactMap { $0 as? EventPublisher<E> } ?? []
+//		guard !publishers.isEmpty else { return register(nil) }
+//		print("Publishers", publishers.count, publishers.map(\.id))
+//		let publisher: EventPublisher<E>?
+//		switch destination {
+//		case .firstSubscriber:
+//			publisher = publishers.first
+//		case .allSubscribers:
+//			publisher = .init { event in
+//				publishers.forEach { $0.publish(event) }
+//			}
+//		case .lastSubscriber:
+//			publisher = publishers.last
+//		}
+//		register(publisher)
 	}
 }
