@@ -39,16 +39,16 @@ public enum PublishingDestination {
 }
 
 /**
- `EventPublishers` are not created directly, instead they are received when using
- the `.publisher` view modifier.
- 
- `EventPublishers` are designed to be stored and used to inject events into the
+ `EventPublishers` are objects that can be stored and used to inject events into the
  view hierarchy.
  
  Because they implement `callAsFunction` they can be called like this:
  ```
  publisher(MyEvent())
  ```
+ 
+ `EventPublishers` are not created directly, instead they are received when using
+ the `.publisher` view modifier.
  */
 public struct EventPublisher<T: Event>: Identifiable, Equatable {
 	public let id: String
