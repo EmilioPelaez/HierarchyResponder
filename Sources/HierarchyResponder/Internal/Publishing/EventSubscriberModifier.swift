@@ -34,7 +34,7 @@ struct EventSubscriberModifier<E: Event>: ViewModifier {
 	
 	func body(content: Content) -> some View {
 		content
-			.publisherRegistrar(for: E.self, childContainers: $containers)
+			.publisherRegistrar(for: E.self, id: id, childContainers: $containers)
 			.onAppearAndChange(of: registrars) { registrars in
 				registerPublisher(registrars, containers: containers)
 			}

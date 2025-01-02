@@ -8,20 +8,23 @@
 import SwiftUI
 
 extension View {
-	func publisherRegistrar<E: Event>(for event: E.Type, childContainers: Binding<Set<PublishersContainer>>) -> some View {
-		modifier(PublisherRegistrarModifier(event: event, childContainers: childContainers))
+	func publisherRegistrar<E: Event>(for event: E.Type, id: String, childContainers: Binding<Set<PublishersContainer>>) -> some View {
+		modifier(PublisherRegistrarModifier(event: event, id: id, childContainers: childContainers))
 	}
 }
 
 struct PublisherRegistrarModifier<E: Event>: ViewModifier {
 	@Environment(\.eventSubscriptionRegistrars) var registrars
 	
+	let id: String
 	@Binding var childContainers: Set<PublishersContainer>
 	
-	@State var registrar: EventSubscriptionRegistrar = .init { _, _ in }
+	@State var registrar: EventSubscriptionRegistrar
 	
-	init(event: E.Type, childContainers: Binding<Set<PublishersContainer>>) {
+	init(event: E.Type, id: String, childContainers: Binding<Set<PublishersContainer>>) {
+		self.id = id
 		self._childContainers = childContainers
+		self._registrar = .init(initialValue: .init(id: id) { _, _ in })
 	}
 	
 	var updatedRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
@@ -37,7 +40,7 @@ struct PublisherRegistrarModifier<E: Event>: ViewModifier {
 	}
 	
 	func createRegistrar() {
-		registrar = .init { id, container in
+		registrar = .init(id: id) { id, container in
 			if let container {
 				childContainers.update(with: container)
 			} else if let container = childContainers.first(where: { $0.id == id }) {

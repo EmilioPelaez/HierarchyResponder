@@ -37,7 +37,7 @@ public extension View {
 	 once it's published. The order of the subscribers is determined by the order
 	 in which they were added to the view hierarchy.
 	 */
-	func publisher<E: Event>(for event: E.Type, id: String, destination: PublishingDestination = .lastLevel, register: @escaping (EventPublisher<E>?) -> Void) -> some View {
+	func publisher<E: Event>(for event: E.Type, id: String = UUID().uuidString, destination: PublishingDestination = .lastLevel, register: @escaping (EventPublisher<E>?) -> Void) -> some View {
 		modifier(EventPublisherModifier(id: id, destination: destination, register: register))
 	}
 	
@@ -47,7 +47,7 @@ public extension View {
 	 event is published, as long as the current subscriber matches the event's
 	 destination.
 	 */
-	func subscribe<E: Event>(to event: E.Type, id: String, handler: @escaping (E) -> Void) -> some View {
+	func subscribe<E: Event>(to event: E.Type, id: String = UUID().uuidString, handler: @escaping (E) -> Void) -> some View {
 		modifier(EventSubscriberModifier(id: id, eventType: event, handler: handler))
 	}
 }

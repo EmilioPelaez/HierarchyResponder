@@ -26,7 +26,7 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	
 	@State var containers: Set<PublishersContainer> = []
 	
-	init(id: String = UUID().uuidString, destination: PublishingDestination, register: @escaping (EventPublisher<E>?) -> Void) {
+	init(id: String, destination: PublishingDestination, register: @escaping (EventPublisher<E>?) -> Void) {
 		self.id = id
 		self.destination = destination
 		self.register = register
@@ -34,8 +34,8 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	
 	func body(content: Content) -> some View {
 		content
-			.publisherRegistrar(for: E.self, childContainers: $containers)
-			.onChange(of: containers) { containers in
+			.publisherRegistrar(for: E.self, id: id, childContainers: $containers)
+			.onAppearAndChange(of: containers) { containers in
 				updatePublisher(containers: containers, destination: destination)
 			}
 			.onChange(of: destination) { destination in
