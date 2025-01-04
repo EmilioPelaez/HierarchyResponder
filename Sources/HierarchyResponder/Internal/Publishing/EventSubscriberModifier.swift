@@ -21,57 +21,19 @@ import SwiftUI
  */
 struct EventSubscriberModifier<E: Event>: ViewModifier {
 	@Environment(\.eventSubscriptionRegistrars) var registrars
-	@Environment(\.responderSafetyLevel) var safetyLevel
 	
+	let id: String
 	let publisher: EventPublisher<E>
-	@State var registrar: EventSubscriptionRegistrar
-	@State var container: PublishersContainer?
+	@State var containers: Set<PublishersContainer> = []
 	
-	var updatedRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
-		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrar
-		return registrars
-	}
-	
-	init(eventType: E.Type, handler: @escaping (E) -> Void) {
-		publisher = .init(publish: handler)
-		self.registrar = .init { _ in }
+	init(id: String, eventType: E.Type, handler: @escaping (E) -> Void) {
+		self.id = id
+		publisher = .init(id: id, publish: handler)
 	}
 	
 	func body(content: Content) -> some View {
 		content
-			.onAppear(perform: createRegistrar)
-			.onAppearAndChange(of: registrars) { registrars in
-				registerPublisher(registrars, container: container)
-			}
-			.onAppearAndChange(of: container) { container in
-				registerPublisher(registrars, container: container)
-			}
-			.onDisappear(perform: unregisterPublisher)
-			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
-	}
-	
-	func createRegistrar() {
-		registrar = .init {
-			container = $0
-		}
-	}
-	
-	func registerPublisher(_ registrars: RegistrarDictionary, container: PublishersContainer?) {
-		guard let registrar = registrars[ObjectIdentifier(E.self)] else {
-			let message = "Subscribed to event with no publisher: \(String(describing: E.self))"
-			switch safetyLevel {
-			case .strict: fatalError(message)
-			case .relaxed: return print(message)
-			case .disabled: return
-			}
-		}
-		let publishers = container?.publishers ?? []
-		let container = PublishersContainer(publishers: [publisher] + publishers)
-		registrar.register(container)
-	}
-	
-	func unregisterPublisher() {
-		registrars[ObjectIdentifier(E.self)]?.register(nil)
+			.publisherRegistrar(for: E.self, id: id, publisher: publisher, containers: $containers)
+			
 	}
 }

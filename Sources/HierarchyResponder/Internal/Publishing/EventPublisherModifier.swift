@@ -18,67 +18,82 @@ typealias RegistrarDictionary = [ObjectIdentifier: EventSubscriptionRegistrar]
  `EventPublisher`.
  */
 struct EventPublisherModifier<E: Event>: ViewModifier {
-	@Environment(\.eventSubscriptionRegistrars) var registrars
 	@Environment(\.responderSafetyLevel) var safetyLevel
 	
+	let id: String
 	let destination: PublishingDestination
 	let register: (EventPublisher<E>?) -> Void
 	
-	@State var registrar: EventSubscriptionRegistrar
-	@State var container: PublishersContainer?
+	@State var containers: Set<PublishersContainer> = []
 	
-	var updatedRegistrars: [ObjectIdentifier: EventSubscriptionRegistrar] {
-		var registrars = registrars
-		registrars[ObjectIdentifier(E.self)] = registrar
-		return registrars
-	}
-	
-	init(destination: PublishingDestination, register: @escaping (EventPublisher<E>?) -> Void) {
+	init(id: String, destination: PublishingDestination, register: @escaping (EventPublisher<E>?) -> Void) {
+		self.id = id
 		self.destination = destination
 		self.register = register
-		self.registrar = .init { _ in }
 	}
 	
 	func body(content: Content) -> some View {
 		content
-			.onAppearAndChange(of: registrars, perform: verifyPublisher)
-			.onAppear(perform: createRegistrar)
-			.onChange(of: container) { container in
-				updatePublisher(container: container, destination: destination)
+			.publisherRegistrar(for: E.self, id: id, publisher: nil, containers: $containers)
+			.onAppearAndChange(of: containers) { containers in
+				updatePublisher(containers: containers, destination: destination)
 			}
 			.onChange(of: destination) { destination in
-				updatePublisher(container: container, destination: destination)
+				updatePublisher(containers: containers, destination: destination)
 			}
 			.onDisappear { register(nil) }
-			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
 	}
 	
-	func createRegistrar() {
-		registrar = .init { container = $0 }
-	}
-	
-	func verifyPublisher(_ registrars: RegistrarDictionary) {
-		if registrars[ObjectIdentifier(E.self)] == nil { return }
-		switch safetyLevel {
-		case .strict, .relaxed: print("Registrating duplicate publisher for event \(String(describing: E.self)). This may lead to unexpected behavior.")
-		case .disabled: break
-		}
-	}
-	
-	func updatePublisher(container: PublishersContainer?, destination: PublishingDestination) {
-		let publishers = container?.publishers.compactMap { $0 as? EventPublisher<E> } ?? []
-		guard !publishers.isEmpty else { return register(nil) }
-		let publisher: EventPublisher<E>?
+	func updatePublisher(containers: Set<PublishersContainer>, destination: PublishingDestination) {
+		guard !containers.isEmpty else { return register(nil) }
+		let publishers: [any EventPublisherProtocol]
 		switch destination {
-		case .firstSubscriber:
-			publisher = publishers.first
-		case .allSubscribers:
-			publisher = .init { event in
-				publishers.forEach { $0.publish(event) }
-			}
-		case .lastSubscriber:
-			publisher = publishers.last
+		case .firstLevel:
+			publishers = containers.map(\.publisher)
+		case .allLevels:
+			let allContainers = containers.flatMap(\.allContainers)
+			publishers = allContainers.map(\.publisher)
+		case .lastLevel:
+			let lastContainers = lastContainers(in: containers)
+			publishers = lastContainers.map(\.publisher)
+		}
+		let filteredPublishers = publishers.compactMap { $0 as? EventPublisher<E> }
+		guard filteredPublishers.count == publishers.count else {
+			assertionFailure("Some publishers were droped")
+			return
+		}
+		let publisher = EventPublisher<E>(id: id) { event in
+			filteredPublishers.forEach { $0.publish(event) }
 		}
 		register(publisher)
+	}
+	
+	func lastContainers(in containers: Set<PublishersContainer>) -> Set<PublishersContainer> {
+		var lastContainers: Set<PublishersContainer> = []
+		var depth = 0
+		func recursion(_ containers: Set<PublishersContainer>, level: Int) {
+			guard !containers.isEmpty else { return }
+			if depth == level {
+				lastContainers.formUnion(containers)
+			} else if level > depth {
+				lastContainers = containers
+				depth = level
+			}
+			
+			containers
+				.map { ($0.containers, level + 1) }
+				.forEach(recursion)
+		}
+		
+		recursion(containers, level: 0)
+		
+		return lastContainers
+	}
+}
+
+public extension Array {
+	subscript(safe index: Index) -> Element? {
+		guard index >= 0, index < count else { return nil }
+		return self[index]
 	}
 }
