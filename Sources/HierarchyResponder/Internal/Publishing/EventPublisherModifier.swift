@@ -33,15 +33,31 @@ struct EventPublisherModifier<E: Event>: ViewModifier {
 	}
 	
 	func body(content: Content) -> some View {
-		content
-			.publisherRegistrar(for: E.self, id: id, publisher: nil, containers: $containers)
-			.onAppearAndChange(of: containers) { containers in
-				updatePublisher(containers: containers, destination: destination)
-			}
-			.onChange(of: destination) { destination in
-				updatePublisher(containers: containers, destination: destination)
-			}
-			.onDisappear { register(nil) }
+		if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
+			content
+				.publisherRegistrar(for: E.self, id: id, publisher: nil, containers: $containers)
+				.onChange(of: containers, initial: true) { oldValue, containers in
+					updatePublisher(containers: containers, destination: destination)
+				}
+				.onChange(of: destination, initial: true) { oldValue, destination in
+					updatePublisher(containers: containers, destination: destination)
+				}
+				.onDisappear { register(nil) }
+		} else {
+			content
+				.publisherRegistrar(for: E.self, id: id, publisher: nil, containers: $containers)
+				.onChange(of: containers) { containers in
+					updatePublisher(containers: containers, destination: destination)
+				}
+				.onChange(of: destination) { destination in
+					updatePublisher(containers: containers, destination: destination)
+				}
+				.onAppear {
+					updatePublisher(containers: containers, destination: destination)
+				}
+				.onDisappear { register(nil) }
+		}
+		
 	}
 	
 	func updatePublisher(containers: Set<PublishersContainer>, destination: PublishingDestination) {

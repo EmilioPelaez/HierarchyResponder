@@ -43,16 +43,32 @@ struct PublisherRegistrarModifier<E: Event>: ViewModifier {
 	}
 	
 	func body(content: Content) -> some View {
-		content
-			.onAppear(perform: createRegistrar)
-			.onAppearAndChange(of: registrars) { registrars in
-				registerPublisher(registrars, containers: containers)
-			}
-			.onAppearAndChange(of: containers) { containers in
-				registerPublisher(registrars, containers: containers)
-			}
-			.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
-			.onDisappear(perform: unregisterPublisher)
+		if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
+			content
+				.onAppear(perform: createRegistrar)
+				.onChange(of: registrars, initial: true) { oldValue, registrars in
+					registerPublisher(registrars, containers: containers)
+				}
+				.onChange(of: containers, initial: true) { oldValue, containers in
+					registerPublisher(registrars, containers: containers)
+				}
+				.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
+				.onDisappear(perform: unregisterPublisher)
+		} else {
+			content
+				.onAppear(perform: createRegistrar)
+				.onChange(of: registrars) { registrars in
+					registerPublisher(registrars, containers: containers)
+				}
+				.onChange(of: containers) { containers in
+					registerPublisher(registrars, containers: containers)
+				}
+				.onAppear {
+					registerPublisher(registrars, containers: containers)
+				}
+				.environment(\.eventSubscriptionRegistrars, updatedRegistrars)
+				.onDisappear(perform: unregisterPublisher)
+		}
 	}
 	
 	func createRegistrar() {
