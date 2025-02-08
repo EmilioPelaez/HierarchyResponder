@@ -44,9 +44,9 @@ jobs:
         run: |
           echo "<script>window.location.href += \"/documentation/hierarchyresponder\"</script>" > ./public/index.html;
       - name: Upload Documentation Artifact to GitHub Pages
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
